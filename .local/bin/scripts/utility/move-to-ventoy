@@ -1,0 +1,25 @@
+#!/bin/sh
+
+###############################################################################
+#                               move-to-ventoy                                #
+###############################################################################
+# Script to move a bootable image to the my ventoy flash drive. This script will
+# put the rsync process in the background so you can close your terminal while
+# it runs.
+#
+# Dependencies:
+# - rsync
+#
+# usage: move-to-ventoy <bootable-image>
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <bootable-image>" >&2
+    exit 1
+fi
+
+VENTOY_DIR="/run/media/$USER/Ventoy/"
+
+rsync -tvzhP "$1" "$VENTOY_DIR" &
+disown
+# the below doesn't work on ext4 filesystems
+# rsync --preallocate -tvzP "$1" "$VENTOY_DIR"

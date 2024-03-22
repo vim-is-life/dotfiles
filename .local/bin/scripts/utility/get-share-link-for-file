@@ -1,0 +1,20 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                           get-share-link-for-file                           #
+###############################################################################
+# Script to HTTP POST a file to the null pointer server (http://0x0.st) and then
+# copy the share link to the clipboard. Please visit the site for its rules, but
+# the TL;DR of it: files must be less than 512 MiB, and be a good human.
+#
+# Dependencies:
+# - curl
+# - an internet connection
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <file-to-upload>" >&2
+    exit 1
+fi
+
+curl -F"file=@$1" 'http://0x0.st' | xclip -selection c
+notify-send "Share link copied to clipboard."

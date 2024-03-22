@@ -1,0 +1,16 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                     create-web-ready-video-from-lossless                    #
+###############################################################################
+# Script to create a web ready video from a lossless one.
+
+STREAMS="$(ffprobe $1 2>&1 | grep 'Stream.*Audio' | wc -l)"
+
+if [ "$STREAMS" -ge 2 ]; then
+    ffmpeg -i "$1" -filter_complex amerge=inputs="$STREAMS" $1.mp4
+    ffmpeg -i "$1" -filter_complex amerge=inputs="$STREAMS" $1.webm
+else
+    ffmpeg -i "$1" "$1.mp4"
+    ffmpeg -i "$1" "$1.webm"
+fi

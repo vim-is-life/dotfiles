@@ -1,0 +1,10 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                                    ledger                                   #
+###############################################################################
+# Script to run ledger but decrypt my journal first. This works because my
+# personal bin dir is prepended to my $PATH.
+
+gpg2 --decrypt -q --for-your-eyes-only --no-tty -d "$LEDGER_FILE" |
+    /usr/bin/ledger -f - "$@"

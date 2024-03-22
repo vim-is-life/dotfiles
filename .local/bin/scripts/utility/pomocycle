@@ -1,0 +1,77 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                                  pomocycle                                  #
+###############################################################################
+# Script to help me use the pomodoro method agnostic of what application I'm in
+# (ie browser, emacs, etc) using figlet, libnotify, coreutils, and python.
+
+PYFILE_BASE=/tmp/pomo.py
+
+# Produce a countdown timer on terminal screen. This function does that in a
+# 'by-hand' type of way (a for-loop for seconds nested within one for minutes),
+# with the timer produced by figlet and the screen cleared after every update.
+countdown() {
+    upper="$(echo $1 - 1 | bc)"
+    for m in $(seq -w $upper -1 0); do
+        for s in $(seq -w 59 -1 0); do
+            figlet -W "$m:$s" &
+            sleep 1
+            clear
+        done
+    done
+}
+
+# Calculate what the time it will be after $1 minutes. This function writes a
+# python script to a temporary file, and runs said file in python, which will
+# use the datetime module to calculate the new time after $1 minutes have
+# elapsed.
+calc_inc() {
+    # this way, once we've gone through the cycle, we're not wasting cycles
+    # writing to files already there, but there needs to be a base and extension
+    # because there's 3 possible time increments.
+    pyfile="$PYFILE_BASE.$1"
+    if [ ! -s "$pyfile" ]; then
+        echo "from datetime import datetime
+from datetime import timedelta
+py_new_time = datetime.now() + timedelta(minutes=$1)
+print(py_new_time.strftime('%a @ %H:%M'))" >$pyfile
+    fi
+    ret_time="$(env python3 $pyfile)"
+    echo $ret_time
+}
+
+# 25-minute pomodoro timer with notification.
+p25() {
+    notify-send 'starting pomo' \
+        "Beginning 25-minute work cycle ending on $(calc_inc 25)."
+    countdown 25
+}
+
+# 5-minute break timer with notification.
+b5() {
+    notify-send 'starting short break.' \
+        "Begin 5-minute break ending on $(calc_inc 5)."
+    countdown 5
+}
+
+# 15-minute break timer with notification.
+b15() {
+    notify-send 'starting short break.' \
+        "Begin 15-minute break ending on $(calc_inc 15)."
+    countdown 15
+}
+
+while true; do
+    for _ in {1..2}; do
+        # runs 1 and 2
+        p25
+        b5
+    done
+    # run 3
+    p25
+    b5
+    # run 4
+    p25
+    b15
+done

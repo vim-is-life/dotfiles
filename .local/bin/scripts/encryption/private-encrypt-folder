@@ -1,0 +1,19 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                                encrypt-folder                               #
+###############################################################################
+# Script to compress a folder and encrypt the archive.
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <input-folder-name>" >&2
+    exit 1
+fi
+
+INFILE="$1"
+ARCHIVE="$(mktemp)"
+OUTPUT="$(hexdump -Cn100 /dev/urandom | md5sum | cut -d' ' -f1)"
+
+tar --create --verbose --file "$ARCHIVE" "$INFILE"
+gpg --batch --yes --encrypt --hidden-recipient 'Super Secret Backups' --output "$OUTPUT" "$ARCHIVE"
+shred -uz "$ARCHIVE"

@@ -1,0 +1,14 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                                 encrypt-file                                #
+###############################################################################
+# Script to encrypt a file using gpg.
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <input-file-name>" >&2
+    exit 1
+fi
+
+OUTPUT="$(hexdump -Cn100 /dev/urandom | md5sum | cut -d' ' -f1)"
+gpg --encrypt --hidden-recipient 'Super Secret Backups' --output "$OUTPUT" "$1"

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+###############################################################################
+#                            pull-isos-from-lserver                           #
+###############################################################################
+# Script to pull bootable *nix images from my home server.
+#
+# Dependencies:
+# - rsync
+#
+# usage: pull-isos-from-server
+
+FAR="lserver:linux-isos"
+NEAR="$HOME"
+
+rsync -trvzhP "$FAR" "$NEAR"

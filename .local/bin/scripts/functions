@@ -1,0 +1,45 @@
+#!/bin/sh
+set -euo
+
+###############################################################################
+#                                  functions                                  #
+###############################################################################
+# Library of commands I use across multiple files that I've turned into
+# functions.
+# Dependencies
+# - notify-send
+# - dunst (or something else that listens for notifications)
+
+notify_of_recording() {
+    if [ "$#" -eq 0 ]; then
+        notify-send "Recording in Progress" \
+            "Recording now ... press 'q' in terminal window to quit."
+    elif [ "$#" -eq 1 ]; then
+        notify-send "Recording in Progress" \
+            "Recording to '$1' ... press 'q' in terminal window to quit."
+    fi
+}
+
+# Function to get the number of the audio monitor pulseaudio device that
+# represents desktop audio.
+get_monitor() {
+    notify-send "Please select your desktop audio."
+    pactl list short sources |
+        dmenu -i -l 10 -p 'Your monitor device:' |
+        cut -d'	' -f1
+}
+
+# Function to get the number of the desired microphone device.
+get_mic() {
+    notify-send "Please select your microphone audio."
+    pactl list short sources |
+        dmenu -i -l 10 -p 'Your microphone device:' |
+        cut -d'	' -f1
+}
+
+# Function to return the name of the camera device.
+get_cam() {
+    notify-send "Please select your camera device."
+    notify-send "(Usually one of the even numbers.)"
+    find /dev/video* | dmenu -i -l 10 -p 'Device:'
+}

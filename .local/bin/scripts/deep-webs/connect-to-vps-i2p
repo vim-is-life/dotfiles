@@ -1,0 +1,21 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                              connect-to-vps-i2p                             #
+###############################################################################
+# Script to connect to i2p through my VPS with SSH.
+
+# map the traffic port
+ssh -fNL 4444:localhost:4444 wserver
+
+# map the console port
+ssh -fNL 7070:localhost:7070 wserver
+
+# map the socks port
+ssh -fNL 4447:localhost:4447 wserver
+
+# don't remember what this is
+ssh -fNL 7656:localhost:7656 wserver
+
+# believe this is irc
+ssh -fNL 6668:localhost:6668 wserver

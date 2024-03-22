@@ -1,0 +1,21 @@
+#!/bin/sh
+
+###############################################################################
+#                              setup-after-boot                               #
+###############################################################################
+# This is a script to run programs that I need to run after I boot the computer.
+# I have this script because I haven't gotten my xinitrc to work correctly yet.
+
+rclone mount school-drive:/ /mnt/gdrive/ --vfs-cache-mode writes --daemon
+rclone mount shared-drive_study-buddies: /mnt/shared-drives/StudyBuddies --vfs-cache-mode writes --daemon
+rclone mount shared-drive_bsu-board: /mnt/shared-drives/BSU-Board --vfs-cache-mode writes --daemon
+rclone mount shared-drive_spanish-mini-performance: /mnt/shared-drives/Spanish-Mini-Perf --vfs-cache-mode writes --daemon
+xlayoutdisplay &
+redshift -PO4000
+dunst &
+wal -R &
+udiskie &
+# picom --experimental-backend -b &
+sxhkd -c ~/.config/qtile/sxhkd/sxhkdrc &
+xbanish &
+/usr/bin/emacs --daemon &

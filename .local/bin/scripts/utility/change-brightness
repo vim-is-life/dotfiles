@@ -1,0 +1,8 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                              change-brightness                              #
+###############################################################################
+# Script to change the brightness by writing to the file storing the brightness. Sudo password will be necessary.
+
+echo "$1" | sudo tee /sys/class/backlight/intel_backlight/brightness

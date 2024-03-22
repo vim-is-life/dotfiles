@@ -1,0 +1,10 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                            remove-metadata-images                           #
+###############################################################################
+# Script to remove all the metadata from a video that's possible to remove.
+# Depends:
+# - ImageMagick
+
+mogrify -strip "$@"

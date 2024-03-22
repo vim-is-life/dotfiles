@@ -1,0 +1,37 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                         backup-multimedia-to-server                         #
+###############################################################################
+# Script to backup my multimedia to my media server.
+# Dependencies:
+# - rsync
+
+# don't need archive as an opt, games are already in compressed format
+RSYNC_OPTS='-rltvhP'
+NEAR_PREFIX="/run/media/$USER"
+NEAR_DRIVE_NAME='Elements'
+NEAR_GAMES_DIR='games'
+# add / at end so that it copies the contents of $NEAR, not the folder itself
+NEAR="$NEAR_PREFIX/$NEAR_DRIVE_NAME/$NEAR_GAMES_DIR/"
+
+FAR_PREFIX='lserver:/media'
+FAR_DRIVE_NAME='MediaDrive'
+FAR_GAMES_DIR='Games'
+FAR="$FAR_PREFIX/$FAR_DRIVE_NAME/$FAR_GAMES_DIR"
+
+rsync "$RSYNC_OPTS" "$NEAR" "$FAR"
+
+# educational content
+
+# software
+# TODO code
+
+# library
+# TODO code
+
+# resources
+# TODO code
+
+# code projects
+# TODO code

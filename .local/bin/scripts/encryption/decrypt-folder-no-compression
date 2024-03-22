@@ -1,0 +1,18 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                                decrypt-folder                               #
+###############################################################################
+# Script to decrypt an archive of a folder and then unarchive it.
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <input-folder-name>" >&2
+    exit 1
+fi
+
+INFILE="$1"
+PASSPHRASE="$(gpg -q --for-your-eyes-only --no-tty -d ~/symkeys/junior-year-imsa.gpg)"
+
+gpg --batch --yes --passphrase "$PASSPHRASE" -d "$INFILE"
+basename "$INFILE" .gpg |
+    xargs -I{} tar --verbose --file '{}'

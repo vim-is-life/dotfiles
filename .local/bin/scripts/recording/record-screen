@@ -1,0 +1,26 @@
+#!/bin/sh
+set -euo
+. "$HOME/.local/bin/scripts/functions"
+###############################################################################
+#                                record-screen                                #
+###############################################################################
+# Script to record the screen without audio.
+# Dependencies:
+# - ffmpeg
+# - X11/Xorg
+#
+# usage: record-screen <output-file-name>
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <output-file-name>" >&2
+    exit 1
+fi
+
+INRES="$(xwininfo -root | grep geometry | cut -d' ' -f4 | cut -d+ -f1)"
+OUTRES=$INRES
+# OUTRES="1280x720"
+FPS="30"
+
+notify_of_recording "$1"
+ffmpeg -y -f x11grab -s "$INRES" -i "$DISPLAY" \
+    -vcodec libx264 -r "$FPS" -s "$OUTRES" "$1"

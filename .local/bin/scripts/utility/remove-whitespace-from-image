@@ -1,0 +1,25 @@
+#!/bin/sh
+
+###############################################################################
+#                         remove-whitespace-from-image                        #
+###############################################################################
+# Script to remove whitespace from image and turn any whiteness on the sides to
+# transparency.
+#
+# dependencies:
+# - imagemagick
+#
+# usage: remove-whitespace-from-image <image>
+# usage: remove-whitespace-from-image <image> <fuzz-percent>
+USAGE_STR="Error: please specify an image.
+usage: $0 <image>
+usage: $0 <image> <fuzz-percent>"
+
+if [ "$#" -eq 2 ]; then
+    mogrify -format png -trim -transparent white -fuzz "$2" "$1"
+elif [ "$#" -eq 1 ]; then
+    mogrify -format png -trim -transparent white -fuzz '15%' "$1"
+else
+    echo "$USAGE_STR" >&2
+    exit 1
+fi

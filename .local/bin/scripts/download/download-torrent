@@ -1,0 +1,13 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                               download-torrent                              #
+###############################################################################
+# This script will download a torrent at the magnet link given to it using aria2c.
+
+if [ -z "$#" ]; then
+    echo "usage: $0 <magnet-link-or-torrent-file(s)>" >&2
+    exit 1
+fi
+
+aria2c --disable-ipv6 --async-dns=false --seed-ratio=1.5 -c "$1"

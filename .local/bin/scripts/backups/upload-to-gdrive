@@ -1,0 +1,8 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                               upload-to-gdrive                              #
+###############################################################################
+# Script to upload files to Google Drive.
+
+gdrive upload -p '1AWiTgIOduQJ6Wy-tNsL8f6RiDSVqsIOh' "$1"

@@ -1,0 +1,13 @@
+#!/bin/sh
+set -euo
+
+###############################################################################
+#                            remove-metadata-video                            #
+###############################################################################
+# Script to remove all the metadata from a video that's possible to remove.
+# Depends:
+# - ffmpeg
+
+mv "$1" "$1.bak"
+ffmpeg -y -i "$1.bak" -map_metadata -1 -c:v copy -c:a copy "$1"
+rm "$1.bak"

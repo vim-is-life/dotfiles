@@ -1,0 +1,67 @@
+#!/bin/sh
+
+###############################################################################
+#                               get-org-template                              #
+###############################################################################
+# Script to fetch my org-mode templates based on the argument.
+#
+# usage: get-org-template <template-type>, where template type is one of:
+#   - mla
+#   - gen
+#   - hist
+#   - sci
+#
+# dependencies:
+#   - svn
+
+USAGE_STR="usage: $0 <template-type>, where template type is one of:
+  - mla
+  - gen
+  - hist
+  - sci"
+
+if [ "$#" -ne 1 ]; then
+    echo "$USAGE_STR" >&2
+    exit 1
+fi
+
+BASE_URL="https://github.com/vim-is-life/org-mode-document-templates/trunk"
+MLA_FOLDER_NAME="english-mla"
+GEN_FOLDER_NAME="general-apa"
+HIST_FOLDER_NAME="history-cmos"
+SCI_FOLDER_NAME="science-apa"
+PRES_FOLDER_NAME="general-presentation"
+MLA_GIT_URL="$BASE_URL/$MLA_FOLDER_NAME"
+GEN_GIT_URL="$BASE_URL/$GEN_FOLDER_NAME"
+HIST_GIT_URL="$BASE_URL/$HIST_FOLDER_NAME"
+SCI_GIT_URL="$BASE_URL/$SCI_FOLDER_NAME"
+PRES_GIT_URL="$BASE_URL/$PRES_FOLDER_NAME"
+
+# Function to clone the folder of the specific template with svn, then move that
+# folder's contents to the normal working directory and delete the svn folder.
+#
+# usage: clone_and_cleanup <url> <folder-name-to-cleanup>
+clone_and_cleanup() {
+    svn checkout $1
+    mv $2/* .
+    mv "$2/.gitignore" .
+    rm -r $2
+}
+
+case "$1" in
+    "mla")
+        clone_and_cleanup $MLA_GIT_URL $MLA_FOLDER_NAME
+        ;;
+    "gen")
+        clone_and_cleanup $GEN_GIT_URL $GEN_FOLDER_NAME
+        ;;
+    "hist")
+        clone_and_cleanup $HIST_GIT_URL $HIST_FOLDER_NAME
+        ;;
+    "sci")
+        clone_and_cleanup $SCI_GIT_URL $SCI_FOLDER_NAME
+        ;;
+    "pres")
+        clone_and_cleanup $PRES_GIT_URL $PRES_FOLDER_NAME
+        ;;
+esac

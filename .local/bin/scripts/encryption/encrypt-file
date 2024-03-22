@@ -1,0 +1,15 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                                 encrypt-file                                #
+###############################################################################
+# Script to encrypt a file using gpg.
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <input-file-name>" >&2
+    exit 1
+fi
+
+PASSPHRASE="$(gpg -q --for-your-eyes-only --no-tty -d ~/symkeys/junior-year-imsa.gpg)"
+gpg --batch --yes -c --passphrase "$PASSPHRASE" \
+    --no-symkey-cache --cipher-algo AES256 "$1"

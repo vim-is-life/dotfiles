@@ -1,0 +1,31 @@
+# -*- mode: conf -*-
+# vim: filetype=conf
+
+### video selection
+--yes-playlist  # if vid refers to playlist and url, download playlist
+
+### video format options
+--prefer-free-formats
+
+### download options
+--fragment-retries 15
+--skip-unavailable-fragments
+--hls-use-mpegts
+
+### filesystem options
+## save all videos under videos directory, and then under directory based on channel name
+# -o ~/Videos/Downloads/%(channel)s/%(upload_date)s--%(title)s.%(ext)s
+## make sure that if there's some missing metadata we still get something sensible
+--restrict-filenames  # make sure we don't have any weird filenames
+# --cookies "~/.config/youtube-dl/cookies.txt"
+
+### workarounds
+# --sleep-interval 3
+# --max-sleep-interval 30
+# --min-sleep-interval 20
+
+### subtitle options
+--write-auto-sub
+
+### post-processing options
+--embed-subs

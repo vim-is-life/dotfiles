@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
+import argparse
+import re
+from lxml import etree
+import requests as r
+
+
+def parse_arguments():
+    desc = "Script to search an archive.org download page for games."
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument(
+        "-f",
+        "--format",
+        choices=["json", "toml", "yaml"],
+        default="toml",
+        help="Format to write data out to.",
+    )
+    parser.add_argument(
+        "-i",
+        "--input",
+        default="./games-to-get",
+        help="Input file with games to search for.",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        default="./games-data",
+        help="Name of output file without extension.",
+    )
+    parser.add_argument("url", help="The archive.org URL to search.", type=str)
+    return parser.parse_args()
+
+
+def parse(lines: str):
+    """Function to return the first word of a string, not including any colons or the like.
+
+    ``Example``
+    >>> list_of_games = 'advance Fun\nawesome runner\n...'
+    >>> parse(list_of_games.split('\n'))
+    ['advance', 'awesome', ...]
+    """
+    pattern = r"^(.*?):?!?('.)?'?\s.*$"
+    prog = re.compile(pattern)
+
+    def parse_l(line):
+        return re.sub(prog, r"\1", line)
+
+    return [elem for elem in set(map(parse_l, lines.split("\n")))]
+
+
+def get_link_info(elem: etree._Element, url: str):
+    """Return a dictionary with the input link's title and href/url.
+
+    ``Example``
+    >>> root = etree.HTML(html)
+    >>> links = root.xpath('//a[contains(text(), "advance")]')
+    >>> get_link_info(links[0])
+    {'link-title': 'Advanced Fun', 'link-url': 'https://download.com/Advanced%20Fun'}
+    """
+    if elem.text is not None:
+        if elem.text.split(" ")[0] != "View":
+            return {"link-title": elem.text, "link-url": f"{url}/{elem.get('href')}"}
+        return None
+
+
+def get_search_term_info(
+    term: str, html: etree._Element, list_of_games: list, url: str
+):
+    """Return the games and links that match a given search term."""
+    matched_games = filter(lambda game: game.split(" ")[0] == term, list_of_games)
+    xpath_q = f"//td/a[starts-with(text(), '{term.capitalize()}')]"
+    matched_links_list = html.xpath(xpath_q)
+    matched_links = map(lambda link: get_link_info(link, url), matched_links_list)
+    return {
+        term: {
+            "matched-games": list(matched_games),
+            "matched-links": list(filter(lambda x: x is not None, matched_links)),
+        }
+    }
+
+
+def write_data_to_file(data: dict, outfile: str, fmt: str):
+    """Write the collected data to a file."""
+    if fmt in ("toml", "yaml", "json"):
+        outfile_w_ext = f"{outfile}.{fmt}"
+        with open(outfile_w_ext, "w") as f:
+            if fmt == "toml":
+                import tomli_w
+
+                f.write(tomli_w.dumps(data))
+            elif fmt == "yaml":
+                import yaml
+
+                yaml.dump(data, f)
+            else:
+                import json
+
+                json.dump(data, f, indent=2)
+    else:
+        print("bad format")
+        return
+
+
+def main():
+    args = parse_arguments()
+    URL: str = args.url
+    HTML: str = r.get(URL).content
+    INFILE: str = args.input
+    OUTFILE: str = args.output
+    FORMAT: str = args.format
+    root: etree._Element = etree.HTML(HTML)
+
+    with open(INFILE, encoding="utf-8") as f:
+        games = f.read()
+    games_search_text = list(filter(lambda x: x != "", parse(games)))
+    games_search_text.sort()
+    games_list = games.split("\n")
+    print("Successfully read games file.")
+
+    results = map(
+        lambda term: get_search_term_info(term, root, games_list, URL),
+        games_search_text,
+    )
+    data = dict(data=list(results))
+    print("Collected data.")
+
+    write_data_to_file(data, OUTFILE, FORMAT)
+    print("Wrote data to file.")
+
+
+if __name__ == "__main__":
+    main()

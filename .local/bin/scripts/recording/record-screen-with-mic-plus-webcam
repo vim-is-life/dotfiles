@@ -1,0 +1,37 @@
+#!/bin/bash
+set -euo
+. "$HOME/.local/bin/scripts/functions"
+###############################################################################
+#                          record-screen-with-webcam                          #
+###############################################################################
+# Script to record the screen with audio.
+# Dependencies (you likely already have the first two):
+# - X11/Xorg
+# - alsa
+# - ffmpeg
+#
+# usage: record-screen <output-file-name>
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <output-file-name>" >&2
+    exit 1
+fi
+
+INRES="$(xwininfo -root | grep geometry | cut -d' ' -f4 | cut -d+ -f1)"
+OUTRES=$INRES
+# OUTRES="1280x720"
+FPS="30"
+VCODEC="libx264"
+# ACODEC="flac"
+ACODEC="libmp3lame"
+
+CAM="$(get_cam)"
+MIC="$(get_mic)"
+
+notify-send "Opening mpv ..."
+mpv "av://v4l2:$CAM" --profile=low-latency --untimed &
+disown
+
+notify_of_recording "$1"
+ffmpeg -y -f x11grab -s "$INRES" -i "$DISPLAY" \
+    -f pulse -i "$MIC" -r "$FPS" -s "$OUTRES" "$1"

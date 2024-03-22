@@ -1,0 +1,104 @@
+#!/bin/sh
+
+###############################################################################
+#                            sync-static-to-server                            #
+###############################################################################
+# Script to push my static HTML sites to my webserver and also to back them up
+# to multiple locations.
+#
+# Depends on
+# - Emacs
+# - fd
+# - rsync (and by extension ssh as well) (on local and remote machine)
+# - sass (nodejs package) (it's the css preprocessor the script assumes you're
+#   using)
+
+# DEFINING CONSTANTS ##########################################################
+
+ORG_DIR="$HOME/Documents/webdev/org/"
+RSYNC_ARGS="-rtvzP"
+WWW_NEAR="$HOME/Documents/webdev/html/"
+WWW_FAR="wserver:/var/www/html"
+WWW_FAR_LOCAL="lserver:"
+
+HELP_TEXT="Usage: sync-static-to-server [option]
+Publish the org files under the web development directory to HTML, and then
+upload the HTML to the remote server.
+
+Options are:
+  -h        Print this help text.
+  -l        Convert/publish the org files to HTML, but don't upload.
+  -s        Only compile Sass files, and then exit.
+
+Please note that passing -ls is invalid because -l will process the sass files
+AND publish the org files."
+
+PRINT_HELP=0
+LOCAL_ONLY=0
+SASS_RECOMPILE_ONLY=0
+
+# SETUP #######################################################################
+
+while getopts 'hls' opt; do
+    case "$opt" in
+        h) PRINT_HELP=1 ;;
+        l) LOCAL_ONLY=1 ;;
+        s) SASS_RECOMPILE_ONLY=1 ;;
+    esac
+done
+
+# Echo the error message passed as positional parameter and exit with error
+# retcode.
+die() {
+    echo "$1"
+    exit 1
+}
+
+# Find all the top-level SASS stylesheets and run the SASS preprocessor software
+# to compile all the sites to a single CSS file.
+preprocess_sass() {
+    cd "$ORG_DIR" || die "Can't 'cd' to org dir."
+    # Do it this way to make sure that we go through all domains and subdomains.
+    for stylesheet in $(fd style.scss); do
+        cur_dir="$(dirname $stylesheet)"
+        sass.js -s compressed "$stylesheet" "$cur_dir/style.css"
+    done
+}
+
+# Function to make sure to copy all subfolders (esp static and img dirs, because
+# those don't get copied by default org-publish-to-html)
+sync_static_from_org_to_html_dir() {
+    cd "$WWW_NEAR" || die "Can't 'cd' to local HTML directory."
+    cd .. || die "Can't 'cd' to webdev directory."
+    rsync "$RSYNC_ARGS" ./org/ ./html
+    cd -
+    fd org -X rm
+}
+
+# BEGIN #######################################################################
+
+if [ $PRINT_HELP -ne 0 ]; then
+    echo "$HELP_TEXT" && exit 0
+fi
+
+# CONVERT FROM ORG TO HTML ####################################################
+preprocess_sass || die "Error with Sass compilation (see above)."
+sync_static_from_org_to_html_dir || die \
+    "Error with syncing with rsync (see above)."
+[ $SASS_RECOMPILE_ONLY -ne 0 ] && exit 0
+
+/usr/bin/emacs -Q --script "$HOME/.local/bin/scripts/webdev/build-site.el"
+[ "$LOCAL_ONLY" -ne 0 ] && exit 0
+
+# UPLOAD TO SERVER ############################################################
+rsync "$RSYNC_ARGS" "$WWW_NEAR" "$WWW_FAR"
+
+# BACKUP 1 -- to local USB drive ##############################################
+# TODO code section
+
+# BACKUP 2 -- to home server ##################################################
+# TODO code section
+
+# BACKUP 3 ####################################################################
+# So technically the third backup will be the directory that has the HTML
+# converted from the org files.

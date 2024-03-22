@@ -1,0 +1,25 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                                decrypt-folder                               #
+###############################################################################
+# Script to decrypt an archive of a folder and then unarchive it.
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <input-folder-name>" >&2
+    exit 1
+fi
+
+mv "$1" "$1.gpg"
+INFILE="$1.gpg"
+
+TMPFILE="$(mktemp)"
+gpg --output "$TMPFILE" --batch --yes --decrypt "$INFILE"
+tar -xvf "$TMPFILE"
+
+shred -uz "$TMPFILE"
+if [ -f "$(basename $INFILE '.gpg')" ]; then
+    shred -uz "$(basename $INFILE '.gpg')"
+fi
+
+mv "$INFILE" "$1"

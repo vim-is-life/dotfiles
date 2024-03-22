@@ -1,0 +1,24 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                                ccreate-symkey                               #
+###############################################################################
+# Script to create a long string of text that could be used as a passkey for
+# symmetric encryption. First, the script reads from urandom, which is known to
+# have good enough RNG for cryptography, and then takes the sha512sum of that.
+# The script then takes the b2sum of that, extracts that hash, and then pipes it
+# to GPG for asymmetric encryption, and GPG saves it to the disk.
+#
+# Depends on:
+# - sha512sum command
+# - b2sum command
+# - GPG (likely to be installed)
+
+TMPFILE="$(mktemp)"
+OUTFILE="$HOME/symkeys/$1.gpg"
+
+head -n200 /dev/urandom | sha512sum | b2sum | cut -d' ' -f1 >"$TMPFILE"
+gpg --no-tty --batch --yes --armor -o "$OUTFILE" -e \
+    --recipient 7CC3AF6CF11E13AA "$TMPFILE"
+rm "$TMPFILE"
+chmod 600 "$OUTFILE"

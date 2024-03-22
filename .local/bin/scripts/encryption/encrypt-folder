@@ -1,0 +1,20 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                                encrypt-folder                               #
+###############################################################################
+# Script to compress a folder and encrypt the archive.
+
+if [ "$#" -ne 1 ]; then
+    echo "usage: $0 <input-folder-name>" >&2
+    exit 1
+fi
+
+INFILE="$1"
+ARCHIVE="$INFILE.tar.gz"
+PASSPHRASE="$(gpg -q --for-your-eyes-only --no-tty -d ~/symkeys/junior-year-imsa.gpg)"
+
+tar --create --gzip --verbose --file "$ARCHIVE" "$INFILE"
+gpg --batch --yes -c --passphrase "$PASSPHRASE" \
+    --no-symkey-cache --cipher-algo AES256 "$ARCHIVE"
+rm "$ARCHIVE"

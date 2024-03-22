@@ -1,0 +1,81 @@
+#!/bin/sh
+set -euo
+###############################################################################
+#                            backup-files-to-drive                            #
+###############################################################################
+# Script to backup my wallpapers, ssh keys, scripts, and more to a USB drive.
+#
+# Dependencies:
+# - rsync
+
+make_archive() {
+    tar -I 'zstd -10' -cvf "$1" "$2"
+}
+
+RSYNC_OPTS='-arvhP'
+PREFIX="/run/media/$USER"
+DRIVE_NAME='nerf-drive'
+FAR="$PREFIX/$DRIVE_NAME/"
+NEAR_BASE="$HOME"
+
+# text: ssh keys ##############################################################
+# rsync "$RSYNC_OPTS" "$NEAR_BASE/.ssh" "$FAR"
+tmp_file="/tmp/ssh-keys.tar.zst"
+make_archive "$tmp_file" "$NEAR_BASE/.ssh"
+rsync "$RSYNC_OPTS" "$tmp_file" "$FAR"
+rm "$tmp_file"
+
+# other: gpg keys #############################################################
+rsync "$RSYNC_OPTS" "$NEAR_BASE/.gnupg" "$FAR"
+
+# text: scripts ###############################################################
+# rsync "$RSYNC_OPTS" "$NEAR_BASE/.local/bin/scripts" "$FAR"
+
+tmp_file="/tmp/my-scripts.tar.zst"
+make_archive "$tmp_file" "$NEAR_BASE/.local/bin/scripts"
+rsync "$RSYNC_OPTS" "$tmp_file" "$FAR"
+rm "$tmp_file"
+
+# text: org dir ###############################################################
+# rsync "$RSYNC_OPTS" "$NEAR_BASE/org" "$FAR"
+tmp_file="/tmp/org.tar.zst"
+make_archive "$tmp_file" "$NEAR_BASE/org"
+rsync "$RSYNC_OPTS" "$tmp_file" "$FAR"
+rm "$tmp_file"
+
+# text: bib files #############################################################
+# rsync "$RSYNC_OPTS" "$NEAR_BASE/bibs" "$FAR"
+tmp_file="/tmp/bibs.tar.zst"
+make_archive "$tmp_file" "$NEAR_BASE/bibs"
+rsync "$RSYNC_OPTS" "$tmp_file" "$FAR"
+rm "$tmp_file"
+
+# other: zotero database ######################################################
+rsync "$RSYNC_OPTS" "$NEAR_BASE/Zotero" "$FAR"
+
+# images: wallpapers ##########################################################
+rsync "$RSYNC_OPTS" "$NEAR_BASE/.local/share/wallpapers" "$FAR"
+
+# text: ledger journals #######################################################
+# rsync "$RSYNC_OPTS" "$NEAR_BASE/finance" "$FAR"
+tmp_file="/tmp/ledger.tar.zst"
+make_archive "$tmp_file" "$NEAR_BASE/finance"
+rsync "$RSYNC_OPTS" "$tmp_file" "$FAR"
+rm "$tmp_file"
+
+# mixed (text and images): website stuff ######################################
+tmp_file="/tmp/website-html.tar.zst"
+make_archive "$tmp_file" "$NEAR_BASE/website-html"
+rsync "$RSYNC_OPTS" "$tmp_file" "$FAR"
+rm "$tmp_file"
+
+tmp_file="/tmp/website-org.tar.zst"
+make_archive "$tmp_file" "$NEAR_BASE/website-org"
+rsync "$RSYNC_OPTS" "$tmp_file" "$FAR"
+rm "$tmp_file"
+
+# more keys ###################################################################
+tmp_file="/tmp/symkeys.tar.zst"
+make_archive "$tmp_file" "$NEAR_BASE/symkeys"
+rsync "$RSYNC_OPTS" "$tmp_file" "$FAR"
+rm "$tmp_file"
