@@ -1,0 +1,123 @@
+# alias sudo='doas'
+
+#!/usr/bin/env bash
+
+### FILE AUTOMATICALLY TANGLED FROM ~/.config/org-mode-literate-configs/shell-config.org ###
+
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# alias l='ls -CF'
+# alias la='ls -A'
+# alias ll='ls -alF'
+
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
+error)" "$(history|tail -n1|sed -e
+'\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+alias c='clear'
+alias up='sudo apt-fast update'
+alias ug='sudo apt-fast upgrade'
+
+alias ls="exa -lh"
+
+alias vcon='sudo surfshark-vpn attack'
+alias vdis='sudo surfshark-vpn down'
+alias vstat='sudo surfshark-vpn status'
+alias vpn='sudo surfshark-vpn'
+alias vmult='sudo surfshark-vpn multi'
+
+alias mkgi='curl -Lo .gitignore https://gitignore.io/api/eclipse,emacs,haskell,intellij,java,julia,kotlin,latex,linux,php,python,tex,text,vim,windows'
+
+alias wdown='rfkill block wifi && vdis'
+alias wup='rfkill unblock wifi && sleep 4 && vcon'
+alias bdown='rfkill block bluetooth'
+alias bup='rfkill unblock bluetooth'
+
+for type in 'mla' 'gen' 'hist' 'sci' 'pres'; do
+    alias "get$type"="get-org-template $type &&
+                                       cd src &&
+                                       chmod +x setup.sh &&
+                                       ./setup.sh &&
+                                       rm setup.sh &&
+                                       cd - &&
+                                       git init &&
+                                       git add .gitignore &&
+                                       git commit -m 'init commit'"
+done
+
+alias dots="/usr/bin/git --git-dir=$HOME/.dotfiles --work-tree=$HOME"
+
+alias wbro='librewolf -p work'
+alias hbro='librewolf -p home'
+alias tbro='librewolf -p throwaway'
+
+alias dsxiv='devour sxiv'
+alias dzath='devour zathura'
+alias dmpv='devour mpv'
+
+alias cd..='cd ..'
+alias pdw='pwd'
+alias udpate='sudo pacman -Syyu'
+alias upate='sudo pacman -Syyu'
+alias updte='sudo pacman -Syyu'
+alias updqte='sudo pacman -Syyu'
+alias upqll='paru -Syu --noconfirm'
+alias upal='paru -Syu --noconfirm'
+
+alias pacman='sudo pacman --color auto'
+alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
+
+alias update-grub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
+
+alias yta-aac='yt-dlp --extract-audio --audio-format aac '
+alias yta-best='yt-dlp --extract-audio --audio-format best '
+alias yta-flac='yt-dlp --extract-audio --audio-format flac '
+alias yta-mp3='yt-dlp --extract-audio --audio-format mp3 '
+alias ytv-best="yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mp4 "
+
+alias chkip='curl https://ipleak.net/json/'
+
+alias em='/usr/bin/emacs -nw'
+alias emacs='emacsclient -c -a emacs'
+
+alias getovpn='bw list items --search openvpn | jq ".[].notes" | xargs printf'
+
+alias getpsgpg='bw list items --search gpg | jq ".[].login.password"'
+alias getpsjou='bw list items --search journal | jq ".[].login.password"'
+alias getpssch='bw list items --search passphrase | jq ".[].login.password"'
+
+alias eled="gpg2 --decrypt -q --for-your-eyes-only --no-tty -d $LEDGER_FILE | ledger -f -"
+alias ehled="gpg2 --decrypt -q --for-your-eyes-only --no-tty -d $LEDGER_FILE | hledger -f -"
+
+alias hconphone='resolvectl query phone | grep phone | cut -d" " -f2 | xargs -I{} adb connect {}'
+alias hcontablet='resolvectl query tablet | grep tablet | cut -d" " -f2 | xargs -I{} adb connect {}'
+alias hconfiretv='resolvectl query firetv | grep firetv | cut -d" " -f2 | xargs -I{} adb connect {}'
+
+alias fix-permissions="sudo chown -R $USER:$USER ~/.config ~/.local"
+alias keyfix="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
+alias key-fix="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
+alias keys-fix="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
+alias fixkey="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
+alias fixkeys="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
+alias fix-key="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
+alias fix-keys="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
+alias fix-sddm-config="/usr/local/bin/arcolinux-fix-sddm-config"
+alias fix-pacman-conf="/usr/local/bin/arcolinux-fix-pacman-conf"
+alias fix-pacman-keyserver="/usr/local/bin/arcolinux-fix-pacman-gpg-conf"
+
+alias aria2c='aria2c --async-dns=false -UWget'
+
+alias cliptopdf='xclip -selection c -o | pandoc -t pdf --pdf-engine=pdfroff -Vpointsize:12p -Vlineheight:13.8p -o'
+
+m() {
+    man -Tpdf "$@" | devour zathura -
+}
