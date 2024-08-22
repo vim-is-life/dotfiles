@@ -25,6 +25,7 @@ background = "#222222"
 foreground = "#F9F9F9"
 
 [font]
+family = "monospace"
 size = 11.0
 
 [font.bold]
