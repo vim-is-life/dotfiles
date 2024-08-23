@@ -7,6 +7,7 @@ export JAVA_HOME="/lib/jvm/java-11-openjdk"
 export PATH="$JAVA_HOME/bin:$PATH"
 
 export PATH="$PATH:$HOME/.emacs.d/bin"
+export PATH="$PATH:$HOME/.config/emacs/bin"
 
 export PATH="$HOME/.local/bin/icecat:$PATH"
 
@@ -15,7 +16,7 @@ export PATH="$PATH:$HOME/.local/bin/node_modules/.bin"
 export MPD_HOST="localhost"
 export MPD_PORT="6601"
 
-fd -td -d1 . "$HOME/.local/bin/scripts" | while read line; do
+find "$HOME/.local/bin/scripts" -type d | while read line; do
     export PATH="$line:$PATH"
 done
 
@@ -26,9 +27,9 @@ export PATH="$PATH:$HOME/.linuxbrew/bin/"
 
 YTFZF_CONFIG_DIR="$HOME/.config/ytfzf"
 
-# export EDITOR="nvim"
-export EDITOR='emacsclient -c -a "emacs"'
-export EDITOR='emacsclient -c -a "emacs"'
+export EDITOR="nvim"
+# export EDITOR='emacsclient -c -a "emacs"'
+# export EDITOR='emacsclient -c -a "emacs"'
 
 . "$HOME/.secret-vars"
 
@@ -42,3 +43,4 @@ export DOOMWADDIR='/run/media/shark/Elements/Games/PC/DOOM-WADs'
 export PATH="$PATH:$HOME/node_modules/sass/"
 
 export PATH="$PATH:$HOME/.local/share/gem/ruby/3.1.0/bin"
+export PATH="/sbin:$PATH"
