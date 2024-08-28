@@ -1,6 +1,0 @@
-[submodule ".config/doom"]
-	path = .config/doom
-	url = https://github.com/vim-is-life/doom
-[submodule ".config/nvim"]
-	path = .config/nvim
-	url = https://github.com/vim-is-life/nvim
