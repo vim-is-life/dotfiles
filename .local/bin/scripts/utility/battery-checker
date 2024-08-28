@@ -1,0 +1,84 @@
+#!/bin/sh
+set -e
+
+# Return (echoes) a random number of seconds to sleep within a given range of
+# minutes
+# $1 :: range low end
+# $2 :: range high end
+get_sleep_time_in_sec() {
+    range_lo_secs=$(( $1 * 60 ))
+    range_hi_secs=$(( $2 * 60 ))
+
+    echo $(shuf -n1 -i "$range_lo_secs-$range_hi_secs")
+}
+
+
+# Returns (echoes) the current battery percent as an integer. Takes no
+# parameters
+get_battery_percent() {
+    MAX_BATTERY=$(cat /sys/class/power_supply/BAT0/energy_full)
+    CUR_BATTERY=$(cat /sys/class/power_supply/BAT0/energy_now)
+    # with this trick i get a percent even though floating point arithmetic is
+    # not supported by POSIX sh. make sure to keep CUR_BATTERY multiplied by 100
+    # first before the division or else integer math truncates the result to 0
+    BAT_PERCENT=$(( CUR_BATTERY * 100 / MAX_BATTERY))
+    echo $BAT_PERCENT
+}
+
+# Returns (echoes) 1 if the battery appears to be plugged in
+is_plugged_in() {
+    cat /sys/class/power_supply/ADP1/online
+}
+
+# main loop. this will run almost like a daemon, so this will be the main loop
+# that runs the battery checker script in the background
+while true; do
+    battery=$(get_battery_percent)
+    sleep_interval_lo=0
+    sleep_interval_hi=0
+
+    # check if we're plugged in. if we are we don't want to alert on the percent
+    # because percent is going up
+    if [ $(is_plugged_in) -ne 0 ]; then
+        [ $DO_LOG ] && echo "we're plugged in, so skipping this iteration check"
+        # sleep for 5min. not sure if adding time suffix is GNU ext so doing
+        # this in seconds
+        sleep $(( 5 * 60 ))
+        continue
+    fi
+
+    # check the battery and notify appropriately. would be nice if we could have
+    # a switch or case statement with a range but i don't think that's how case
+    # statements work in POSIX sh
+    if [ $battery -le 5 ]; then
+        notify-send "BATTERY CRITICALLY LOW" "battery is at $battery percent, plug in now"
+        sleep_interval_lo=2
+        sleep_interval_hi=3
+    elif [ $battery -le 10 ]; then
+        notify-send "battery very low" "battery is at $battery percent, plug in ASAP"
+        sleep_interval_lo=4
+        sleep_interval_hi=5
+    elif [ $battery -le 20 ]; then
+        notify-send "battery low" "battery is at $battery percent, plug in soon"
+        sleep_interval_lo=6
+        sleep_interval_hi=7
+    elif [ $battery -le 30 ]; then
+        notify-send "battery running low" "battery is at $battery percent, get charger ready"
+        sleep_interval_lo=9
+        sleep_interval_hi=10
+    else
+        # here we just want to sleep for a decently long time because as far as
+        # we know battery is good
+        sleep_interval_lo=10
+        sleep_interval_hi=10
+    fi
+
+
+    # sleep so as to not run up the cpu
+    sleep_time=$(get_sleep_time_in_sec $sleep_interval_lo $sleep_interval_hi)
+    if [ $DO_LOG ]; then
+        echo "Battery calculated to be about $battery%"
+        echo "Sleeping for about $(( sleep_time / 60 )) mins ($sleep_time secs)"
+    fi
+    sleep $sleep_time
+done

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+MAX=$(get-max-brightness)
+CUR=$(get-brightness)
+perl -e "print int($CUR + $MAX * 0.1)" | doas xargs tee /sys/class/backlight/intel_backlight/brightness
