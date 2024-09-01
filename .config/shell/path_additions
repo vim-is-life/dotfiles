@@ -16,7 +16,7 @@ export PATH="$PATH:$HOME/.local/bin/node_modules/.bin"
 export MPD_HOST="localhost"
 export MPD_PORT="6601"
 
-find "$HOME/.local/bin/scripts" -type d | while read line; do
+find -L "$HOME/.local/bin/scripts" -type d | while read line; do
     export PATH="$line:$PATH"
 done
 
