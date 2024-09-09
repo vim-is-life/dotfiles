@@ -63,3 +63,6 @@
 
 ;; 2024-08-20 for ulisp work
 (package! ulisp-repl)
+
+;; 2024-09-09 for auto managing buffer size
+(package! golden-ratio)
