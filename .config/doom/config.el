@@ -123,6 +123,11 @@
     '("clang-format --style=\"{BasedOnStyle: llvm, IndentWidth: 4}\"")))
                                         ; optional as ccls is the default in Doom
 
+;; 2024-09-09 golden ratio
+(use-package golden-ratio
+  :hook (after-init . golden-ratio-mode)
+  :config (setq! golden-ratio-auto-scale t))
+
 ;;; org settings
 (after! org
   (setq! org-ellipsis " ▼ "
