@@ -209,3 +209,13 @@
 (map! :mode 'ledger-mode
       (:desc "Previous uncleared trans" :n "C-p" #'ledger-navigate-previous-uncleared
        :desc "Next uncleared trans" :n "C-n" #'ledger-navigate-next-uncleared))
+
+;; 2024-09-10: golden-ratio: hook into window move commands to do auto resizing
+;; TODO: do this in a better way where it just hooks in after an evil window jump command
+(map! :mode 'golden-ratio-mode
+      :leader
+      (:prefix ("w" . "Golden ratio window move functions")
+       :desc "Move to right window" "l" #'windmove-right
+       :desc "Move to left window"  "h" #'windmove-left
+       :desc "Move to upper window" "k" #'windmove-up
+       :desc "Move to lower window" "j" #'windmove-down))
