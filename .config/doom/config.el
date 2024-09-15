@@ -132,6 +132,7 @@
                                                 "*doom:.*"))
   :config (setq! golden-ratio-auto-scale t))
 
+;; 2024-09-15: configuring dirvish quick access entries
 (after! dirvish
   (setq! dirvish-quick-access-entries
          `(("h" "~/"                                "Home")
