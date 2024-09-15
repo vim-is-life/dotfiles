@@ -132,6 +132,16 @@
                                                 "*doom:.*"))
   :config (setq! golden-ratio-auto-scale t))
 
+(after! dirvish
+  (setq! dirvish-quick-access-entries
+         `(("h" "~/"                                "Home")
+           ("e" ,user-emacs-directory               "Emacs user directory")
+           ("e" "~/.dotfiles/.config/doom/"         "Doom user directory")
+           ("c" "~/code/"                           "Code")
+           ("d" "~/Downloads/"                      "Downloads")
+           ("m" ,(concat "/media/" user-login-name) "Mounted drives")
+           ("t" "~/.local/share/Trash/files/"       "Trash"))))
+
 ;;; org settings
 (after! org
   (setq! org-ellipsis " ▼ "
