@@ -127,7 +127,7 @@
 (use-package golden-ratio
   :hook (after-init . golden-ratio-mode)
   ;; :custom (golden-ratio-exclude-buffer-names '("doom:scratch"))
-  :custom (golden-ratio-exclude-modes '(occur-mode))
+  :custom (golden-ratio-exclude-modes '(occur-mode calendar-mode))
   :custom (golden-ratio-exclude-buffer-regexp '(".*repl.*"
                                                 "*doom:.*"))
   :config (setq! golden-ratio-auto-scale t))
