@@ -51,8 +51,8 @@
 
 ;;; citations
 ;; 2023-??-??  will maybe try to use native org cites.... we'll see
-;;(package! org-ref)      ; citations, cross-references, and more
-;;(package! ivy-bibtex)   ; insert citations with org mode/org-ref
+(package! org-ref)      ; citations, cross-references, and more
+(package! ivy-bibtex)   ; insert citations with org mode/org-ref
 
 ;; 2023-??-?? arduino for microcontrollers class
 (package! arduino-mode
