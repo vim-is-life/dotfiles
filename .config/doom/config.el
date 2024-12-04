@@ -99,7 +99,10 @@
 ;; docview settings
 (setq! doc-view-continuous t)
 
-;; doom modeline settings
+;; 2024-12-04: display time and doom modeline settings
+(display-time-mode 1)                                     ; set display-time mode to be on for time in modeline
+(setq! display-time-24hr-format t
+       display-time-mail-string "")
 (setq! doom-modeline-buffer-file-name-style 'buffer-name  ; only show unique buffer names
        doom-modeline-major-mode-icon t                    ; show an icon for filetype
        doom-modeline-enable-word-count t                  ; enable word count on selections
