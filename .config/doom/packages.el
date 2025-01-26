@@ -67,3 +67,8 @@
 
 ;; 2024-09-09 for auto managing buffer size
 (package! golden-ratio)
+
+;; 2025-01-26 for added rref functionality to calc-mode
+;; taken from https://github.com/doomemacs/doomemacs/blob/master/docs/getting_started.org#usingloading-local-packages
+(package! calc-rref
+  :recipe (:local-repo "~/.config/doom/packages/calc-rref/"))
