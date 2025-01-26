@@ -237,11 +237,12 @@
 ;; TODO: do this in a better way where it just hooks in after an evil window jump command
 (map! :mode 'golden-ratio-mode
       :leader
-      (:prefix ("w" . "Golden ratio window move functions")
+      (:prefix ("w" . "Golden ratio window functions")
        :desc "Move to right window" "l" (cmd! (evil-window-right 1) (golden-ratio))
        :desc "Move to left window"  "h" (cmd! (evil-window-left 1) (golden-ratio))
        :desc "Move to upper window" "k" (cmd! (evil-window-up 1) (golden-ratio))
-       :desc "Move to lower window" "j" (cmd! (evil-window-down 1) (golden-ratio))))
+       :desc "Move to lower window" "j" (cmd! (evil-window-down 1) (golden-ratio))
+       :desc "Toggle golden ratio"  "t" #'golden-ratio-mode))
 
 ;; 2024-09-11: adding keymap for inserting date regardless of mode
 (map! :i "C-i" (cmd! (insert (string-trim (shell-command-to-string "date '+%Y-%m-%d'")))))
