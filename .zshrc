@@ -41,11 +41,11 @@ fi
 
 # [ $TERM = "st-256color" ] && set -o vi
 
-(cat ~/.cache/wal/sequences &)
+# (cat ~/.cache/wal/sequences &)
 
-source ~/.cache/wal/colors-tty.sh
+# source ~/.cache/wal/colors-tty.sh
 
-. /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+. /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
