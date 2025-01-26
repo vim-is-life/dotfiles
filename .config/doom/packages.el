@@ -54,6 +54,7 @@
 (package! org-ref)      ; citations, cross-references, and more
 (package! ivy-bibtex)   ; insert citations with org mode/org-ref
 
+;;; other
 ;; 2023-??-?? arduino for microcontrollers class
 (package! arduino-mode
   :recipe (:host github :repo "bookest/arduino-mode"))
