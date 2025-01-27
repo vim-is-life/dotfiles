@@ -165,6 +165,7 @@
 (setq! org-pomodoro-length 25)
 
 ;; calc settings
+(use-package! calc-rref)
 (setq! calc-prefer-frac t
        calc-symbolic-mode t
        calc-internal-prec 50)
