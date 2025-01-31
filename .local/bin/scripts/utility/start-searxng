@@ -2,7 +2,9 @@
 ###############################################################################
 #              start-searxng - start podman container for searxng             #
 ###############################################################################
+set -e
 
+podman rm searxng
 podman run --rm --name=searxng \
     -d -p 6969:8080 \
     -v "${HOME}/.config/searxng:/etc/searxng" \
