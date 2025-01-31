@@ -1,0 +1,47 @@
+#!/bin/sh
+###############################################################################
+#                 save-to-howm - save images to howm media dir                #
+###############################################################################
+set -e
+
+usage() {
+    echo "save-to-howm - convert images jpg/avif and save to howm media dir
+Usage:
+  save-to-howm <filename> [format]
+
+Arguments:
+  filename   (mandatory)   the name of the file to save. i only need the
+                           basename, as i search for pictures in your
+                           ~/Downloads. do note that i will delete the original
+                           from your downloads to save you space. please note that i will poop the bed if your
+
+  format     (optional)    the format to convert the image to. one of 'jpg' or
+                           'avif'. i use jpg by default because it seems Emacs
+                           28.2 doesn't work with avif and the Emacs that Debian
+                           supplies seems to not be built with ImageMagick
+                           support to be able to use it as an external converter
+                           to view avif images."
+}
+
+# see https://www.cyberciti.biz/faq/extract-bash-get-filename-extension/
+# also see man 1 dash (heading "Parameter Expansion")
+format="jpg"
+[ -n "$2" ] && format="$2"
+filename="$1"
+orig_ext="${filename##*.}"
+new_name="$(basename $filename .$orig_ext).$format"
+
+# sanity checks
+if [ "$format" != "jpg" ] && [ "$format" != "avif" ] ; then
+    echo "[ERROR] bad format: $format"
+    usage
+    exit 1
+elif [ $# -ne 1 ] && [ $# -ne 2 ]; then
+    echo "[ERROR] bad arg count"
+    usage
+    exit 1
+fi
+
+set -x
+convert ~/Downloads/"$filename" ~/howm/media/"$new_name"
+rm ~/Downloads/"$filename"
