@@ -1,0 +1,16 @@
+[Unit]
+Description=SearXNG container
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+Image=docker.io/searxng/searxng
+Environment=INSTANCE_NAME="cia/nsa/fbi"
+Port=6969:8080
+Volume=%h/my-searxng/searxng:/etc/searxng
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
