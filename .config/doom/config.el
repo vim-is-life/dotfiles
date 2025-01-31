@@ -152,11 +152,13 @@
            ("t" "~/.local/share/Trash/files/"       "Trash"))))
 
 ;;; org settings
-(after! org
-  (setq! org-ellipsis " ▼ "
-         org-image-actual-width 500
-         org-log-done 'time
-         org-hide-emphasis-markers t))
+;; 2025-01-27: changed this to try to fix the org-font-lock error because i read
+;; this might help. this is where i found it out:
+;; https://old.reddit.com/r/emacs/comments/t1zfgj/file_mode_specification_error_failed_to_define/
+(setq! org-ellipsis " ▼ "
+       org-image-actual-width 500
+       org-log-done 'time
+       org-hide-emphasis-markers t)
 
 ;; ox-reveal settings
 (setq! org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
