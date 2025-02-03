@@ -151,6 +151,14 @@
            ("m" ,(concat "/media/" user-login-name) "Mounted drives")
            ("t" "~/.local/share/Trash/files/"       "Trash"))))
 
+;; 2025-02-03: adding ledger reports that i commonly use
+(after! ledger
+  ;; want to add a report for budget, for checking card, and for seeing real checking vs real card
+  (push '("bal (budget)" "%(binary) -f %(ledger-file) bal Liabilities Budget Checking")
+        ledger-reports)
+  (push '("reg (cards)" "%(binary) -f %(ledger-file) reg --tail 20 Liabilities")
+        ledger-reports))
+
 ;;; org settings
 ;; 2025-01-27: changed this to try to fix the org-font-lock error because i read
 ;; this might help. this is where i found it out:
