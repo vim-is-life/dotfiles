@@ -1,0 +1,18 @@
+#!/bin/sh
+###############################################################################
+#          start-openwebui: start the openwebui container for ollama          #
+###############################################################################
+
+# taken from
+# - https://docs.openwebui.com/getting-started/quick-start/
+# - https://itsfoss.com/install-deepseek-r1-locally-linux/
+# - https://roderik.no/podman-and-open-webui
+# - https://fedoramagazine.org/running-generative-ai-models-locally-with-ollama-and-open-webui/
+#  ^^^this fedora magazine one was most helpful
+podman run --name openwebui \
+    -d -e 'OLLAMA_BASE_URL=http://localhost:11434' \
+    -e 'ANONYMIZED_TELEMETRY=False' \
+    -v open-webui:/app/backend/data \
+    --network=host \
+    --restart always \
+    ghcr.io/open-webui/open-webui:main

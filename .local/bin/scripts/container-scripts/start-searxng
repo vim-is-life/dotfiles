@@ -4,10 +4,9 @@
 ###############################################################################
 set -e
 
-podman rm searxng
-podman run --rm --name=searxng \
+podman run --name=searxng \
     -d -p 6969:8080 \
     -v "${HOME}/.config/searxng:/etc/searxng" \
     -e "INSTANCE_NAME=5eyes" \
-    docker.io/searxng/searxng &
-wait
+    --restart always \
+    docker.io/searxng/searxng
