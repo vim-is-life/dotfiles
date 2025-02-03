@@ -159,9 +159,13 @@
 ;; 2025-02-03: adding ledger reports that i commonly use
 (after! ledger
   ;; want to add a report for budget, for checking card, and for seeing real checking vs real card
-  (push '("bal (budget)" "%(binary) -f %(ledger-file) bal Liabilities Budget Checking")
+  (push `("bal (budget)" ,(concat "%(binary) -f %(ledger-file) bal -b "
+                                  (format-time-string "%Y") ;sanity check to make sure my years are not typo
+                                  " Liabilities Budget Checking"))
         ledger-reports)
-  (push '("reg (cards)" "%(binary) -f %(ledger-file) reg --tail 20 Liabilities")
+  (push `("reg (cards)" ,(concat "%(binary) -f %(ledger-file) reg -b "
+                                 (format-time-string "%Y") ;sanity check to make sure my years are not typo
+                                 " --tail 20 Liabilities"))
         ledger-reports))
 
 ;;; org settings
