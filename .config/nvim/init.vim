@@ -12,6 +12,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC
 \| endif
 
+let g:python3_host_prog = "/usr/bin/python3" 
 "-------------------Load files-----------------
 call plug#begin('~/.config/nvim/plugged')
 
