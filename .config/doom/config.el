@@ -148,7 +148,12 @@
            ("e" "~/.dotfiles/.config/doom/"         "Doom user directory")
            ("c" "~/code/"                           "Code")
            ("d" "~/Downloads/"                      "Downloads")
+           ("D" "~/Documentation/"                  "Program and language documentation")
+           ("x" "~/.dotfiles/"                      "Dotfiles")
            ("m" ,(concat "/media/" user-login-name) "Mounted drives")
+           ("l" "~/Music/"                          "Local music")
+           ("M" ,(concat "/media/" user-login-name
+                         "/escudo/Music/")          "Music on drive")
            ("t" "~/.local/share/Trash/files/"       "Trash"))))
 
 ;; 2025-02-03: adding ledger reports that i commonly use
