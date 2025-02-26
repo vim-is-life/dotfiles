@@ -157,8 +157,8 @@
            ("t" "~/.local/share/Trash/files/"       "Trash"))))
 
 ;; 2025-02-03: adding ledger reports that i commonly use
+;; want to add a report for budget, for checking card, and for seeing real checking vs real card
 (after! ledger
-  ;; want to add a report for budget, for checking card, and for seeing real checking vs real card
   (push `("bal (budget)" ,(concat "%(binary) -f %(ledger-file) bal -b "
                                   (format-time-string "%Y") ;sanity check to make sure my years are not typo
                                   " Liabilities Budget Checking"))
@@ -168,7 +168,12 @@
                                  " --tail 20 Liabilities"))
         ledger-reports))
 
+
 ;;; org settings
+;; 2025-02-25: setting my todo keywords
+(setq! org-todo-keywords '((sequence "TODO(t)" "PROJ(p)" "LOOP(r)" "STARTED(s)" "|" "DONE(d)")
+                           (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")))
+
 ;; 2025-01-27: changed this to try to fix the org-font-lock error because i read
 ;; this might help. this is where i found it out:
 ;; https://old.reddit.com/r/emacs/comments/t1zfgj/file_mode_specification_error_failed_to_define/
