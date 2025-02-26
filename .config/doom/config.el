@@ -262,3 +262,8 @@
 
 ;; 2024-09-11: adding keymap for inserting date regardless of mode
 (map! :i "C-i" (cmd! (insert (string-trim (shell-command-to-string "date '+%Y-%m-%d'")))))
+
+;; org mode
+(map! :map org-mode-map
+      :desc "Move timestamp down a day" :n "C-k" #'org-timestamp-down-day
+      :desc "Move timestamp up a day" :n "C-j" #'org-timestamp-up-day)
