@@ -198,6 +198,13 @@
        calc-symbolic-mode t
        calc-internal-prec 50)
 
+;; 2025-03-04: adding package to be able to control mpv from emacs
+;; TODO find way to have mpvi pop up the controls in a small buffer when opening the mpvi-seek interface
+(use-package! mpvi
+  :hook (dired-mode . mpvi-emms-integrated-mode)
+  :hook (org-mode . mpvi-emms-integrated-mode)
+  :custom (mpvi-tesseract-args "-l eng"))
+
 ;;; 2024-08-19 howm notetaking system config
 (use-package! howm
   ;; :mode ("_howm\\.org\\'" . howm-mode)
@@ -247,15 +254,17 @@
        :desc "Winner redo" "<right>" #'winner-redo
        :desc "Winner undo" "<left>" #'winner-undo))
 
-;; emms
+;; emms + mpvi
 (map! :leader
-      (:prefix ("e" . "EMMS audio player")
+      (:prefix ("e" . "mpvi and EMMS audio player")
        :desc "Go to emms playlist" "a" #'emms-playlist-mode-go
        :desc "Emms pause track" "x" #'emms-pause
        :desc "Emms stop track" "s" #'emms-stop
        :desc "Emms play previous track" "p" #'emms-previous
        :desc "Emms play next track" "n" #'emms-next
-       :desc "Emms play file" "o" #'emms-play-file))
+       :desc "Emms play file" "o" #'emms-play-file
+       :desc "Open the `mpvi-seek' interface" "d" #'mpvi-seek ; think like "mpvi-do" or something
+       :desc "Open video with mpv" "O" #'mpvi-open))
 
 ;; ledger-mode: Make C-p go to previous uncleared and C-n go to next uncleared.
 (map! :mode 'ledger-mode

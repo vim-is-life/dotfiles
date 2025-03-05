@@ -72,3 +72,7 @@
 ;; taken from https://github.com/doomemacs/doomemacs/blob/master/docs/getting_started.org#usingloading-local-packages
 (package! calc-rref
   :recipe (:local-repo "~/.config/doom/packages/calc-rref/"))
+
+;; 2025-03-04: adding mpvi package to be able to control mpv from emacs
+(package! mpvi
+  :recipe (:local-repo "~/.config/doom/packages/mpvi/"))
