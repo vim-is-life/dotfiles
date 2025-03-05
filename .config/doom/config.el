@@ -171,8 +171,12 @@
 
 ;;; org settings
 ;; 2025-02-25: setting my todo keywords
-(setq! org-todo-keywords '((sequence "TODO(t)" "PLAN(p)" "PROJ(j)" "LOOP(r)" "STARTED(s)" "|" "DONE(d)" "NOFINISH(n)")
-                           (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)" "[!](N)")))
+(after! org
+  (setq! org-todo-keywords '((sequence
+                              "TODO(t)" "PLAN(p)" "PROJ(j)" "LOOP(r)" "STARTED(s)"
+                              "|" "DONE(d)" "NOFINISH(n)")
+                             (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)" "[!](N)"))
+         org-agenda-start-on-weekday 1))
 
 ;; 2025-01-27: changed this to try to fix the org-font-lock error because i read
 ;; this might help. this is where i found it out:
