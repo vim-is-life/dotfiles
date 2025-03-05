@@ -2,7 +2,7 @@
 ###############################################################################
 #              start-searxng - start podman container for searxng             #
 ###############################################################################
-set -x
+set -ex
 
 podman rm searxng || true
 podman run --name=searxng \

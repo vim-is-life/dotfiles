@@ -9,6 +9,9 @@
 # - https://roderik.no/podman-and-open-webui
 # - https://fedoramagazine.org/running-generative-ai-models-locally-with-ollama-and-open-webui/
 #  ^^^this fedora magazine one was most helpful
+set -ex
+
+podman rm searxng || true
 podman run --name openwebui \
     -d -e 'OLLAMA_BASE_URL=http://localhost:11434' \
     -e 'ANONYMIZED_TELEMETRY=False' \
