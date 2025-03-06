@@ -207,6 +207,26 @@
   :custom (mpvi-big-seek-step 60)
   :custom (mpvi-tesseract-args "-l eng"))
 
+;; 2025-03-06 irc (ERC client) config
+(setq erc-nick "segfault8989"
+      ;; Join the #emacs and #erc channels whenever connecting to Libera.Chat.
+      erc-autojoin-channels-alist '(("Libera.Chat"
+                                     "#emacs" "#erc" "#lisp" "#web" "#emacs-til"
+                                     "#hardware"))
+      ;; Rename server buffers to reflect the current network name instead of
+      ;; SERVER:PORT (e.g., "Libera.Chat" instead of "irc.libera.chat:6667").
+      erc-rename-buffers t
+      ;; Interpret mIRC-style color commands in IRC chats
+      erc-interpret-mirc-color t
+      ;; Kill buffers for channels after /part
+      erc-kill-buffer-on-part t
+      ;; Kill buffers for private queries after quitting the server
+      erc-kill-queries-on-quit t
+      ;; Kill buffers for server messages after quitting the server
+      erc-kill-server-buffer-on-quit t
+      ;; type of messages to hide
+      erc-hide-list '("JOIN"))
+
 ;;; 2024-08-19 howm notetaking system config
 (use-package! howm
   ;; :mode ("_howm\\.org\\'" . howm-mode)
