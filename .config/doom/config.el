@@ -305,7 +305,9 @@
        :desc "Toggle golden ratio"  "t" #'golden-ratio-mode))
 
 ;; 2024-09-11: adding keymap for inserting date regardless of mode
-(map! :i "C-i" (cmd! (insert (string-trim (shell-command-to-string "date '+%Y-%m-%d'")))))
+(map! :desc "Insert the current date"
+      :i ",d"
+      (cmd! (insert (string-trim (shell-command-to-string "date '+%Y-%m-%d'")))))
 
 ;; org mode
 (map! :map org-mode-map
