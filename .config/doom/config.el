@@ -203,6 +203,8 @@
 (use-package! mpvi
   :hook (dired-mode . mpvi-emms-integrated-mode)
   :hook (org-mode . mpvi-emms-integrated-mode)
+  :custom (mpvi-regular-seek-step 5)
+  :custom (mpvi-big-seek-step 60)
   :custom (mpvi-tesseract-args "-l eng"))
 
 ;;; 2024-08-19 howm notetaking system config

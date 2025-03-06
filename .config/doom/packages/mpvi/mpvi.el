@@ -982,17 +982,46 @@ Keybind `C-x b' to choose video path from `mpvi-favor-paths'."
 
 (defvar mpvi-seek-overlay nil)
 
+(defcustom mpvi-small-seek-step :ff
+  "The 'small' interval to use for seeking.
+If setting is a number then step by seconds.
+If setting is a xx% format then step by percent.
+If setting is a :ff or :fb then step forward/backward one frame."
+  :type (list 'integer 'symbol 'string))
+
+(defcustom mpvi-regular-seek-step 1
+  "The 'regular' interval to use for seeking.
+If setting is a number then step by seconds.
+If setting is a xx% format then step by percent.
+If setting is a :ff or :fb then step forward/backward one frame."
+  :type (list 'integer 'symbol 'string))
+
+(defcustom mpvi-big-seek-step "1%"
+  "The 'big' interval to use for seeking.
+If setting is a number then step by seconds.
+If setting is a xx% format then step by percent.
+If setting is a :ff or :fb then step forward/backward one frame."
+  :type (list 'integer 'symbol 'string))
+
+(defun mpvi--negate-step (step)
+  "Based on the type of STEP, negate it sensibly."
+  (cond ((numberp step) (- step))
+        ((eql :ff step) :fb)
+        ((stringp step) (concat "-" step))
+        (t (user-error (concat  "Format provided to `negate-step' is not valid. "
+                                "Check your custom seek-step settings")))))
+
 (defvar mpvi-seek-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map minibuffer-local-map)
     (define-key map (kbd "i")   #'mpvi-seeking-insert)
     (define-key map (kbd "g")   #'mpvi-seeking-revert)
-    (define-key map (kbd "n")   (lambda () (interactive) (mpvi-seeking-walk 1)))
-    (define-key map (kbd "p")   (lambda () (interactive) (mpvi-seeking-walk -1)))
-    (define-key map (kbd "N")   (lambda () (interactive) (mpvi-seeking-walk "1%")))
-    (define-key map (kbd "P")   (lambda () (interactive) (mpvi-seeking-walk "-1%")))
-    (define-key map (kbd "M-n") (lambda () (interactive) (mpvi-seeking-walk :ff)))
-    (define-key map (kbd "M-p") (lambda () (interactive) (mpvi-seeking-walk :fb)))
+    (define-key map (kbd "n")   (lambda () (interactive) (mpvi-seeking-walk mpvi-regular-seek-step)))
+    (define-key map (kbd "p")   (lambda () (interactive) (mpvi-seeking-walk (mpvi--negate-step mpvi-regular-seek-step))))
+    (define-key map (kbd "N")   (lambda () (interactive) (mpvi-seeking-walk mpvi-big-seek-step)))
+    (define-key map (kbd "P")   (lambda () (interactive) (mpvi-seeking-walk (mpvi--negate-step mpvi-big-seek-step))))
+    (define-key map (kbd "M-n") (lambda () (interactive) (mpvi-seeking-walk mpvi-small-seek-step)))
+    (define-key map (kbd "M-p") (lambda () (interactive) (mpvi-seeking-walk (mpvi--negate-step mpvi-small-seek-step))))
     (define-key map (kbd "C-l") (lambda () (interactive) (mpvi-seeking-walk 0)))
     (define-key map (kbd "C-n") (lambda () (interactive) (mpvi-seeking-walk 1)))
     (define-key map (kbd "C-p") (lambda () (interactive) (mpvi-seeking-walk -1)))
@@ -1261,19 +1290,19 @@ PROMPT is used in minibuffer when invoke `mpvi-seek'."
         (unless (mpvi-seekable)
           (user-error "Current video is not seekable, it makes no sense to insert timestamp link"))
         (mpvi-with-current-mpv-link (node path)
-                                    (when-let* ((ret (mpvi-seek (if node (plist-get node :vbeg)) prompt)))
-                                      (mpvi-pause t)
-                                      ;; if on a mpv link, update it
-                                      (if node (delete-region (plist-get node :begin) (plist-get node :end))
-                                        ;; if new insert, prompt for description
-                                        (unwind-protect
-                                            (setq description (string-trim (read-string "Description: ")))
-                                          (mpvi-pause (cdr ret))))
-                                      ;; insert the new link
-                                      (let ((link (funcall mpvi-build-link-function path (car ret)
-                                                           (if node (plist-get node :vend))
-                                                           (if (> (length description) 0) description))))
-                                        (save-excursion (insert link))))))
+          (when-let* ((ret (mpvi-seek (if node (plist-get node :vbeg)) prompt)))
+            (mpvi-pause t)
+            ;; if on a mpv link, update it
+            (if node (delete-region (plist-get node :begin) (plist-get node :end))
+              ;; if new insert, prompt for description
+              (unwind-protect
+                  (setq description (string-trim (read-string "Description: ")))
+                (mpvi-pause (cdr ret))))
+            ;; insert the new link
+            (let ((link (funcall mpvi-build-link-function path (car ret)
+                                 (if node (plist-get node :vend))
+                                 (if (> (length description) 0) description))))
+              (save-excursion (insert link))))))
     (user-error "This is not org-mode, should not insert org link")))
 
 ;;;###autoload
@@ -1369,20 +1398,20 @@ ARG is the argument."
   "Seek position for this link."
   (interactive)
   (mpvi-with-current-mpv-link (node)
-                              (when node (mpvi-seek))))
+    (when node (mpvi-seek))))
 
 (defun mpvi-current-link-update-end-pos ()
   "Update the end position on this link."
   (interactive)
   (mpvi-with-current-mpv-link (node)
-                              (when node
-                                (let ((ret (mpvi-seek (or (plist-get node :vend)
-                                                          (max (plist-get node :vbeg) (mpvi-prop 'playback-time)))
-                                                      (format "Set end position (%d-%d): " (plist-get node :vbeg) (mpvi-prop 'duration)))))
-                                  (delete-region (plist-get node :begin) (plist-get node :end))
-                                  (let ((link (funcall mpvi-build-link-function (plist-get node :path)
-                                                       (plist-get node :vbeg) (car ret))))
-                                    (save-excursion (insert link)))))))
+    (when node
+      (let ((ret (mpvi-seek (or (plist-get node :vend)
+                                (max (plist-get node :vbeg) (mpvi-prop 'playback-time)))
+                            (format "Set end position (%d-%d): " (plist-get node :vbeg) (mpvi-prop 'duration)))))
+        (delete-region (plist-get node :begin) (plist-get node :end))
+        (let ((link (funcall mpvi-build-link-function (plist-get node :path)
+                             (plist-get node :vbeg) (car ret))))
+          (save-excursion (insert link)))))))
 
 (defun mpvi-current-link-show-preview ()
   "Show the preview tooltip for this link."
