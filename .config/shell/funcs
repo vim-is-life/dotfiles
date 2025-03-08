@@ -2,7 +2,8 @@
 # vim: set filetype=sh:
 
 m() {
-    man -Tpdf "$@" | devour zathura -
+    # man -Tpdf "$@" | devour zathura -
+    man -Tpdf "$@" | zathura -
 }
 
 # TODO move change brightness scripts into here to make them fns
