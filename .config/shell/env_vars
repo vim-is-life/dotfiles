@@ -1,0 +1,39 @@
+# -*- mode: sh; -*-
+# vim: set filetype=sh:
+
+export JAVA_HOME="/lib/jvm/java-11-openjdk"
+
+export MPD_HOST="localhost"
+export MPD_PORT="6601"
+
+export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share"
+export XDG_DATA_DIRS="$XDG_DATA_DIRS:/home/shark/.local/share/flatpak/exports/share"
+export XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share"
+
+YTFZF_CONFIG_DIR="$HOME/.config/ytfzf"
+
+export EDITOR="nvim"
+# export EDITOR='emacsclient -c -a "emacs"'
+# export EDITOR='emacsclient -c -a "emacs"'
+
+source ~/.secret-vars
+
+export CALIBRE_USE_DARK_PALETTE=1
+export CALIBRE_USE_SYSTEM_THEME=1
+
+# 2025-01-26: setting neovim as manpager
+export MANPAGER="nvim +Man!"
+
+# Path stuff
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$JAVA_HOME/bin:$PATH"
+export PATH="$PATH:$HOME/.emacs.d/bin"
+export PATH="$PATH:$HOME/.config/emacs/bin"
+export PATH="$PATH:$HOME/.local/bin/node_modules/.bin"
+export PATH="$PATH:$HOME/node_modules/sass/"
+export PATH="$PATH:$HOME/.local/share/gem/ruby/3.1.0/bin"
+export PATH="/sbin:$PATH"
+
+find -L "$HOME/.local/bin/scripts" -type d | while read line; do
+    export PATH="$line:$PATH"
+done
