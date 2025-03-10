@@ -1,29 +1,28 @@
-# -*- mode: sh; -*-
-# vim: set filetype=sh:
+#!/usr/bin/env sh
 
 # BRIGHTNESS STUFF ############################################################
 # get current system brightness
-get-brightness() {
+get_brightness() {
     cat /sys/class/backlight/intel_backlight/brightness
 }
 
 # get maximum system brightness
-get-max-brightness() {
+get_max_brightness() {
     cat /sys/class/backlight/intel_backlight/max_brightness
 
 }
 
 # change the brightness by writing to the file storing it
-change-brightness() {
+change_brightness() {
     echo "$1" | doas tee /sys/class/backlight/intel_backlight/brightness
 }
 
 # increase the brightness by a certain percent
 # if no percent increment provided, change by 5%
 # NOTE: percent increment (first arg) must be an integer in range [0, 100]
-increase-brightness() {
+increase_brightness() {
     # args
-    percent_increment=10
+    percent_increment=5
     if [ "$#" -ne 0 ]; then
         percent_increment=$1
     fi
@@ -66,7 +65,5 @@ m() {
     # man -Tpdf "$@" | devour zathura -
     man -Tpdf "$@" | zathura -
 }
-
-# TODO move change brightness scripts into here to make them fns
 
 # TODO evaluate what other things i should make as functions instead of scripts
