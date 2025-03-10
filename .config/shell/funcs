@@ -63,7 +63,11 @@ decrease_brightness() {
 # MISC FUNCTIONS ##############################################################
 m() {
     # man -Tpdf "$@" | devour zathura -
-    man -Tpdf "$@" | zathura -
+    tmpfile="/tmp/tmp.koDRJpFhol"
+    man -Tpdf "$@" > $tmpfile
+    zathura $tmpfile &
+    disown
+    sleep 0.5 && exit
 }
 
 # TODO evaluate what other things i should make as functions instead of scripts
