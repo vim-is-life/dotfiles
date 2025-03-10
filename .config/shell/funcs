@@ -36,10 +36,29 @@ increase-brightness() {
 
     [ $MAX -eq $CUR ] && return
 
-    echo $MAX
-    echo $CUR
-    echo $ACTUAL_INCR
-    echo $NEW_BRIGHTNESS
+    change_brightness $NEW_BRIGHTNESS
+}
+
+# decrease the brightness by a certain percent
+# if no percent increment provided, change by 5%
+# NOTE: percent increment (first arg) must be an integer in range [0, 100]
+decrease_brightness() {
+    # args
+    percent_increment=5
+    if [ "$#" -ne 0 ]; then
+        percent_increment=$1
+    fi
+
+    # on intel, lowest brightness is 0 so i can take max-brightness to be the range
+    MAX=$(get-max-brightness)
+    CUR=$(get-brightness)
+    ACTUAL_INCR=$((MAX * percent_increment / 100))
+    NEW_BRIGHTNESS=$((CUR - ACTUAL_INCR))
+
+    [ 0 -eq $CUR ] && return
+    [ 0 -le $NEW_BRIGHTNESS ] && return
+
+    change_brightness $NEW_BRIGHTNESS
 }
 
 # MISC FUNCTIONS ##############################################################
