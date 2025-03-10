@@ -3,6 +3,7 @@
 syntax enable
 let mapleader=" "
 let maplocalleader=" m"
+set ignorecase
 set smartcase
 set incsearch
 set hlsearch
