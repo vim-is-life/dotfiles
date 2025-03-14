@@ -28,8 +28,8 @@ increase_brightness() {
     fi
 
     # on intel, lowest brightness is 0 so i can take max-brightness to be the range
-    MAX=$(get-max-brightness)
-    CUR=$(get-brightness)
+    MAX=$(get_max_brightness)
+    CUR=$(get_brightness)
     ACTUAL_INCR=$((MAX * percent_increment / 100))
     NEW_BRIGHTNESS=$((CUR + ACTUAL_INCR))
 
@@ -48,13 +48,13 @@ decrease_brightness() {
     fi
 
     # on intel, lowest brightness is 0 so i can take max-brightness to be the range
-    MAX=$(get-max-brightness)
-    CUR=$(get-brightness)
+    MAX=$(get_max_brightness)
+    CUR=$(get_brightness)
     ACTUAL_INCR=$((MAX * percent_increment / 100))
     NEW_BRIGHTNESS=$((CUR - ACTUAL_INCR))
 
     [ 0 -eq $CUR ] && return
-    [ 0 -le $NEW_BRIGHTNESS ] && return
+    [ $NEW_BRIGHTNESS -le 0 ] && return
 
     echo "brightness: $((CUR * 100 / MAX))% -> $((NEW_BRIGHTNESS * 100 / MAX))%"
     change_brightness $NEW_BRIGHTNESS
