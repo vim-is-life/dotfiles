@@ -1,31 +1,36 @@
 #! /bin/sh
 
 # caching wallpaper for lock screen
-WALL="~/Documents/favorite-wallpaper.png"
+WALL=~/Documents/favorite-wallpaper.png
 if ! [ -e "$WALL" ]; then
     WALL="$(find $HOME/.local/share/wallpapers -type f | shuf -n1)"
 fi
 
+# setting wallpaper and lockpaper
 RES=$(xrandr | grep '\*' | awk '{print $1}')!
 convert "$WALL" -resize $RES /tmp/lockpaper.png
+nitrogen --random --set-zoom-fill "Pictures/wallpapers" &
+xss-lock --transfer-sleep-lock -- i3lock --nofork --image /tmp/lockpaper.png &
 
 # AUTOSTART PROGRAMS ##########################################################
 pgrep -x sxhkd >/dev/null || sxhkd &
 pgrep -x pcmanfm >/dev/null || pcmanfm -d &
-# nm-applet &
-# 2025-03-17: commenting this out because i think that pcmanfm daemon will do this
-# udiskie &
-picom
-usr/lib/xfce-polkit/xfce-polkit &
-nitrogen --random --set-zoom-fill "Pictures/wallpapers" &
-xss-lock --transfer-sleep-lock -- i3lock --nofork --image /tmp/lockpaper.png &
-
-~/.local/bin/scripts/polybar/polybar-launch.sh &
 pgrep -x battery-checker >/dev/null || ~/.local/bin/scripts/utility/battery-checker &
+pgrep -x picom >/dev/null || picom &
+
+/usr/lib/xfce-polkit/xfce-polkit &
+~/.local/bin/scripts/polybar/polybar-launch.sh &
 # END AUTOSTART PROGRAMS ######################################################
 
+
+# GENERAL SETTINGS ############################################################
 # switch caps to ctrl
 setxkbmap -option ctrl:nocaps
+
+# make sure i dont see a weird 'X' for cursor
+xsetroot -cursor_name left_ptr
+# END GENERAL SETTINGS ########################################################
+
 
 # BSPWM CONFIG ################################################################
 bspc monitor -d I II III IV V VI VII VIII IX X
