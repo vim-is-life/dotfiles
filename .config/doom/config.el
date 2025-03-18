@@ -217,8 +217,10 @@
                                      "#emacs-social"
                                      "#emacs-til"
                                      "#erc"
+                                     "##esp8266"
                                      "#hardware"
                                      "#lisp"
+                                     "#lua"
                                      "#web"))
       ;; Rename server buffers to reflect the current network name instead of
       ;; SERVER:PORT (e.g., "Libera.Chat" instead of "irc.libera.chat:6667").
