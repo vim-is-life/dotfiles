@@ -32,7 +32,7 @@ super + shift + f
 	pcmanfm
 
 super + u
-	$HOME/.local/bin/scripts/utility/unmount-drive
+	~/.local/bin/scripts/utility/unmount-drive
 
 #
 # bspwm hotkeys
@@ -72,7 +72,7 @@ super + ctrl + {m,x,y,z}
 
 # open man pages for a specific program
 super + shift + d
-	$HOME/.local/bin/scripts/utility/show-man-page-pdf.sh
+	~/.local/bin/scripts/utility/show-man-page-pdf.sh
 
 #
 # focus/swap
