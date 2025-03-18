@@ -1,7 +1,11 @@
 #! /bin/sh
 
 # caching wallpaper for lock screen
-WALL="$(find $HOME/.local/share/wallpapers -type f | shuf -n1)"
+WALL="~/Documents/favorite-wallpaper.png"
+if ! [ -e "$WALL" ]; then
+    WALL="$(find $HOME/.local/share/wallpapers -type f | shuf -n1)"
+fi
+
 RES=$(xrandr | grep '\*' | awk '{print $1}')!
 convert "$WALL" -resize $RES /tmp/lockpaper.png
 
@@ -9,14 +13,15 @@ convert "$WALL" -resize $RES /tmp/lockpaper.png
 pgrep -x sxhkd >/dev/null || sxhkd &
 pgrep -x pcmanfm >/dev/null || pcmanfm -d &
 # nm-applet &
-udiskie &
-compton --backend glx --vsync opengl-swc &
+# 2025-03-17: commenting this out because i think that pcmanfm daemon will do this
+# udiskie &
+picom
 usr/lib/xfce-polkit/xfce-polkit &
-nitrogen --random --set-zoom-fill &
+nitrogen --random --set-zoom-fill "Pictures/wallpapers" &
 xss-lock --transfer-sleep-lock -- i3lock --nofork --image /tmp/lockpaper.png &
 
-$HOME/.local/bin/scripts/polybar/polybar-launch.sh &
-pgrep -x battery-checker >/dev/null || $HOME/.local/bin/scripts/utility/battery-checker &
+~/.local/bin/scripts/polybar/polybar-launch.sh &
+pgrep -x battery-checker >/dev/null || ~/.local/bin/scripts/utility/battery-checker &
 # END AUTOSTART PROGRAMS ######################################################
 
 # switch caps to ctrl
