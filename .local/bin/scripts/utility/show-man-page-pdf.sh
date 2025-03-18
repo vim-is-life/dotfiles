@@ -2,7 +2,7 @@
 set -xe
 
 # DMENU=dmenu
-DMENU="rofi -dmenu"
+DMENU="rofi -dmenu -matching regex"
 
 SELECTED_LINE=$(apropos . | $DMENU -l 20 -p 'desired manpage?')
 MAN_PG=$(echo $SELECTED_LINE | cut -d' ' -f1)
