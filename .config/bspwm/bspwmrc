@@ -19,9 +19,8 @@ pgrep -x battery-checker >/dev/null || ~/.local/bin/scripts/utility/battery-chec
 pgrep -x picom >/dev/null || picom &
 
 /usr/lib/xfce-polkit/xfce-polkit &
-~/.local/bin/scripts/polybar/polybar-launch.sh &
+[ "$(hostname)" != "lake-michigan" ] && ~/.local/bin/scripts/polybar/polybar-launch.sh &
 # END AUTOSTART PROGRAMS ######################################################
-
 
 # GENERAL SETTINGS ############################################################
 # switch caps to ctrl
@@ -30,7 +29,6 @@ setxkbmap -option ctrl:nocaps
 # make sure i dont see a weird 'X' for cursor
 xsetroot -cursor_name left_ptr
 # END GENERAL SETTINGS ########################################################
-
 
 # BSPWM CONFIG ################################################################
 bspc monitor -d I II III IV V VI VII VIII IX X
