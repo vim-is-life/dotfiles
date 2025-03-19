@@ -11,7 +11,7 @@
 #  ^^^this fedora magazine one was most helpful
 set -ex
 
-podman rm searxng || true
+podman rm openwebui || true
 podman run --name openwebui \
     -d -e 'OLLAMA_BASE_URL=http://localhost:11434' \
     -e 'ANONYMIZED_TELEMETRY=False' \
