@@ -1,7 +1,4 @@
-#
-# wm independent hotkeys
-#
-
+###### WM INDEPENDENT ##########################################################
 # terminal emulator
 super + Return
 	alacritty
@@ -23,6 +20,11 @@ super + alt + space
 super + e
     emacsclient -c -a emacs
 
+# open an org capture window, and then make it floating
+super + z
+	bspc rule -a Emacs --one-shot state=floating; \
+	emacsclient --eval "(+org-capture/open-frame)"
+
 # launch mpv off of whatever link is in the clipboard
 super + shift + o
 	xclip -selection c -o | xargs mpv
@@ -33,11 +35,9 @@ super + shift + f
 
 super + u
 	~/.local/bin/scripts/utility/unmount-drive
+################################################################################
 
-#
-# bspwm hotkeys
-#
-
+##### BSPWM HOTKEYS ############################################################
 # quit/restart bspwm
 super + alt + {q,r}
 	bspc {quit,wm -r}
@@ -57,11 +57,9 @@ super + y
 # swap the current node and the biggest window
 super + g
 	bspc node -s biggest.window
+################################################################################
 
-#
-# state/flags
-#
-
+##### STATE/FLAGS ##############################################################
 # set the window state
 super + {t,shift + t,s,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
@@ -73,11 +71,9 @@ super + ctrl + {m,x,y,z}
 # open man pages for a specific program
 super + shift + d
 	~/.local/bin/scripts/utility/show-man-page-pdf.sh
+################################################################################
 
-#
-# focus/swap
-#
-
+##### FOCUS/SWAP ###############################################################
 # focus the node in the given direction
 super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
@@ -107,11 +103,9 @@ super + {o,i}
 # focus or send to the given desktop
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
+################################################################################
 
-#
-# preselect
-#
-
+##### PRESELECT #################################################################
 # preselect the direction
 super + ctrl + {h,j,k,l}
 	bspc node -p {west,south,north,east}
@@ -127,11 +121,9 @@ super + ctrl + space
 # cancel the preselection for the focused desktop
 super + ctrl + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+################################################################################
 
-#
-# move/resize
-#
-
+##### MOVE/RESIZE #####
 # expand a window by moving one of its side outward
 super + alt + {h,j,k,l}
 	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
@@ -143,3 +135,7 @@ super + alt + shift + {h,j,k,l}
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
+################################################################################
+
+# references:
+# - https://dharmx.is-a.dev/bspwm-basics/#bspc
