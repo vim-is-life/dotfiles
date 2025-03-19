@@ -1,26 +1,33 @@
-#! /bin/sh
-
-# caching wallpaper for lock screen
-WALL=~/Documents/favorite-wallpaper.png
-if ! [ -e "$WALL" ]; then
-    WALL="$(find $HOME/.local/share/wallpapers -type f | shuf -n1)"
-fi
-
-# setting wallpaper and lockpaper
-RES=$(xrandr | grep '\*' | awk '{print $1}')!
-convert "$WALL" -resize $RES /tmp/lockpaper.png
-nitrogen --random --set-zoom-fill "Pictures/wallpapers" &
-xss-lock --transfer-sleep-lock -- i3lock --nofork --image /tmp/lockpaper.png &
-
+#!/bin/sh
+#
 # AUTOSTART PROGRAMS ##########################################################
 pgrep -x sxhkd >/dev/null || sxhkd &
 pgrep -x pcmanfm >/dev/null || pcmanfm -d &
 pgrep -x battery-checker >/dev/null || ~/.local/bin/scripts/utility/battery-checker &
-pgrep -x picom >/dev/null || picom &
+if [ "$(hostname)" != "lake-michigan" ]; then
+    # TODO: switch to a lemonbar-based setup eventually
+    pgrep -x polybar >/dev/null || polybar &
+fi
 
+(pkill picom; sleep .5; picom) &
 /usr/lib/xfce-polkit/xfce-polkit &
-[ "$(hostname)" != "lake-michigan" ] && ~/.local/bin/scripts/polybar/polybar-launch.sh &
 # END AUTOSTART PROGRAMS ######################################################
+
+# WALLPAPERS ##################################################################
+# caching wallpaper for lock screen. first look for a favorite-wallpaper.jpg or
+# .png in ~/, otherwise pick a random one
+WALL_DIR=~/Pictures/wallpapers/
+LOCKSCREEN_PAPER="$(find $WALL_DIR -type f | shuf -n1)"
+DESKTOP_PAPER=~/favorite-wallpaper.png
+[ ! -e "$DESKTOP_PAPER" ] && DESKTOP_PAPER=~/favorite-wallpaper.jpg
+[ ! -e "$DESKTOP_PAPER" ] && DESKTOP_PAPER="$(find $WALL_DIR -type f | shuf -n1)"
+
+# setting wallpaper and lockpaper
+RES=$(xrandr | grep '\*' | awk '{print $1}')!
+convert "$LOCKSCREEN_PAPER" -resize $RES /tmp/lockpaper.png
+xwallpaper --zoom "$DESKTOP_PAPER" &
+xss-lock --transfer-sleep-lock -- i3lock --nofork --image /tmp/lockpaper.png &
+# END WALLPAPERS ##############################################################
 
 # GENERAL SETTINGS ############################################################
 # switch caps to ctrl
@@ -31,6 +38,8 @@ xsetroot -cursor_name left_ptr
 # END GENERAL SETTINGS ########################################################
 
 # BSPWM CONFIG ################################################################
+# TODO: modify below line to support multimonitor so that if i plug laptop into
+# something and restart wm, i can do stuff on other screen
 bspc monitor -d I II III IV V VI VII VIII IX X
 
 bspc config border_width 2
@@ -49,3 +58,4 @@ bspc rule -a Screenkey manage=off
 bspc rule -a Zathura state=tiled
 bspc rule -a Emacs state=tiled
 # END BSPWM CONFIG ############################################################
+# also check out ~/.dotfiles/.config/sxhkd/sxhkdrc
