@@ -2,41 +2,48 @@
 
 while read -r file; do
     case "$1" in
-        # "w") setbg "$file" & ;;
-        "w") wal -i "$file" & ;;
-            # "c")
-            #     [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | awk '{print $2}' | dmenu -l 20 -i -p "Copy file(s) to where?" | sed "s|~|$HOME|g")"
-            #     [ ! -d "$destdir" ] && notify-send "$destdir is not a directory, cancelled." && exit
-            #     cp "$file" "$destdir" && notify-send -i "$(readlink -f "$file")" "$file copied to $destdir." &
-            #     ;;
-            # "m")
-            #     [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | awk '{print $2}' | dmenu -l 20 -i -p "Move file(s) to where?" | sed "s|~|$HOME|g")"
-            #     [ ! -d "$destdir" ] && notify-send "$destdir is not a directory, cancelled." && exit
-            #     mv "$file" "$destdir" && notify-send -i "$(readlink -f "$file")" "$file moved to $destdir." &
-            #     ;;
-        "r")
-            convert -rotate 90 "$file" "$file"
+        # "c")
+        #     [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | awk '{print $2}' | dmenu -l 20 -i -p "Copy file(s) to where?" | sed "s|~|$HOME|g")"
+        #     [ ! -d "$destdir" ] && notify-send "$destdir is not a directory, cancelled." && exit
+        #     cp "$file" "$destdir" && notify-send -i "$(readlink -f "$file")" "$file copied to $destdir." &
+        #     ;;
+        # "m")
+        #     [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | awk '{print $2}' | dmenu -l 20 -i -p "Move file(s) to where?" | sed "s|~|$HOME|g")"
+        #     [ ! -d "$destdir" ] && notify-send "$destdir is not a directory, cancelled." && exit
+        #     mv "$file" "$destdir" && notify-send -i "$(readlink -f "$file")" "$file moved to $destdir." &
+        #     ;;
+        "d") # delete the image, with confirmation
+            [ "$(printf "No\\nYes" | dmenu -i -p "Really delete $file?")" = "Yes" ] && rm "$file" && notify-send "$file deleted."
             ;;
-        "R")
-            convert -rotate -90 "$file" "$file"
+        "D") # run imagemagick "display" on file, in new process
+            setsid -f display "$file" ;;
+        "f") # flip the image
+            convert -flop "$file" "$file" ;;
+        "g") # run gimp on file, in new process
+            setsid -f gimp "$file" ;;
+        "h") # print the contents of this file as a helptext
+            cat "$HOME/.config/sxiv/exec/key-handler" ;;
+        "i") # show image information
+            notify-send "File information" "$(mediainfo "$file")" ;;
+        "r") # rotate image 90 degrees clockwise
+            convert -rotate 90 "$file" "$file" ;;
+        "R") # rotate image 90 degrees counter-clockwise
+            convert -rotate -90 "$file" "$file" ;;
+        "w") # set wallpaper
+            xwallpaper --zoom "$file" & ;;
+        "W") # set as favorite wallpaper
+            name_no_ext=${file%.*}
+            ext=${file#"$name_no_ext"}
+            cp "$file" ~/favorite-wallpaper"$ext"
+            xwallpaper --zoom "$file" &
             ;;
-        "f")
-            convert -flop "$file" "$file"
-            ;;
-        "y")
+        "y") # copy image name to clipboard
             echo -n "$file" | tr -d '\n' | xclip -selection clipboard &&
                 notify-send "$file copied to clipboard" &
             ;;
-        "Y")
+        "Y") # copy absolute path of image to clipboard
             readlink -f "$file" | tr -d '\n' | xclip -selection clipboard &&
                 notify-send "$(readlink -f "$file") copied to clipboard" &
             ;;
-        "d")
-            [ "$(printf "No\\nYes" | dmenu -i -p "Really delete $file?")" = "Yes" ] && rm "$file" && notify-send "$file deleted."
-            ;;
-        "D") setsid -f display "$file" ;;
-        "g") setsid -f gimp "$file" ;;
-        "i") notify-send "File information" "$(mediainfo "$file")" ;;
-        "h") cat "$HOME/.config/sxiv/exec/key-handler" ;;
     esac
 done
