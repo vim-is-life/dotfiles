@@ -49,12 +49,15 @@ bspc config window_gap 12
 bspc config split_ratio 0.46
 bspc config borderless_monocle true
 bspc config gapless_monocle true
+bspc config automatic_scheme spiral
 
 # bspc rule -a Gimp desktop='^8' state=floating follow=on
 # bspc rule -a Chromium desktop='^2'
-bspc rule -a mplayer2 state=floating
-bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
+bspc rule -a Kupfer.py focus=on
+# FIXME: these two don't seem to work right
+# bspc rule -a blueman-manager state=floating
+# bspc rule -a pavucontrol state=floating
 bspc rule -a Zathura state=tiled
 bspc rule -a Emacs state=tiled
 # END BSPWM CONFIG ############################################################
