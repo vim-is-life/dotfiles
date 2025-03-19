@@ -33,8 +33,15 @@ super + shift + o
 super + shift + f
 	pcmanfm
 
+# unmount any mounted drive
 super + u
 	~/.local/bin/scripts/utility/unmount-drive
+
+# open man pages for a specific program
+super + shift + d
+	~/.local/bin/scripts/utility/show-man-page-pdf.sh
+
+# TODO: add keybind to show dialog for suspending, shutdown, or reboot
 ################################################################################
 
 ##### BSPWM HOTKEYS ############################################################
@@ -67,10 +74,6 @@ super + {t,shift + t,s,f}
 # set the node flags
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
-
-# open man pages for a specific program
-super + shift + d
-	~/.local/bin/scripts/utility/show-man-page-pdf.sh
 ################################################################################
 
 ##### FOCUS/SWAP ###############################################################
@@ -103,6 +106,9 @@ super + {o,i}
 # focus or send to the given desktop
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
+
+# TODO: add keybind for focusing other monitor
+# TODO: add keybind for moving node to other monitor
 ################################################################################
 
 ##### PRESELECT #################################################################
