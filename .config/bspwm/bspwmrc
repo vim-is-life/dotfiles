@@ -4,6 +4,7 @@
 pgrep -x sxhkd >/dev/null || sxhkd &
 pgrep -x pcmanfm >/dev/null || pcmanfm -d &
 pgrep -x battery-checker >/dev/null || ~/.local/bin/scripts/utility/battery-checker &
+pgrep -x dunst >/dev/null || dunst &
 if [ "$(hostname)" != "lake-michigan" ]; then
     # TODO: switch to a lemonbar-based setup eventually
     pgrep -x polybar >/dev/null || polybar &
