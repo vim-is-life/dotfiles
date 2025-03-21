@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # AUTOSTART PROGRAMS ##########################################################
-pgrep -x sxhkd >/dev/null || sxhkd &
+pgrep -x sxhkd >/dev/null || sxhkd -t 2 &
 pgrep -x pcmanfm >/dev/null || pcmanfm -d &
 pgrep -x battery-checker >/dev/null || ~/.local/bin/scripts/utility/battery-checker &
 pgrep -x dunst >/dev/null || dunst &
@@ -28,6 +28,9 @@ RES=$(xrandr | grep '\*' | awk '{print $1}')!
 convert "$LOCKSCREEN_PAPER" -resize $RES /tmp/lockpaper.png
 xwallpaper --zoom "$DESKTOP_PAPER" &
 xss-lock --transfer-sleep-lock -- i3lock --nofork --image /tmp/lockpaper.png &
+# TODO:
+# - get wal set up and then use that leter to config the border color for
+#   inactive and active windows
 # END WALLPAPERS ##############################################################
 
 # GENERAL SETTINGS ############################################################
