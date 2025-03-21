@@ -41,6 +41,10 @@ super + u
 super + shift + d
 	~/.local/bin/scripts/utility/show-man-page-pdf.sh
 
+# open a power dialog: shutdown, reboot, suspend
+ctrl + space
+	~/.local/bin/scripts/utility/show-power-dialog
+
 # TODO: add keybind to show dialog for suspending, shutdown, or reboot
 ################################################################################
 
@@ -72,7 +76,7 @@ super + {t,shift + t,s,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # set the node flags
-ctrl + shift + {m,l,s,p}
+super + x ; {m,l,s,p}
 	bspc node -g {marked,locked,sticky,private}
 ################################################################################
 
