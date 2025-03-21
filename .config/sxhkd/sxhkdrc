@@ -45,7 +45,11 @@ super + shift + d
 ctrl + space
 	~/.local/bin/scripts/utility/show-power-dialog
 
-# TODO: add keybind to show dialog for suspending, shutdown, or reboot
+# open a nvim buffer to show the sxhkdrc so you can know your keybinds
+super + alt + h
+	bspc rule -a Alacritty --one-shot state=floating; \
+    alacritty -T 'neovim view: sxhkdrc (press ZZ to exit)' -e sh -c "<~/.config/sxhkd/sxhkdrc sed '/TODO/d' | view"
+
 ################################################################################
 
 ##### BSPWM HOTKEYS ############################################################
