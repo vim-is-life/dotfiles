@@ -5,12 +5,18 @@ pgrep -x sxhkd >/dev/null || sxhkd -t 2 &
 pgrep -x pcmanfm >/dev/null || pcmanfm -d &
 pgrep -x battery-checker >/dev/null || ~/.local/bin/scripts/utility/battery-checker &
 pgrep -x dunst >/dev/null || dunst &
+pgrep -x syncthing >/dev/null || syncthing &
 if [ "$(hostname)" != "lake-michigan" ]; then
     # TODO: switch to a lemonbar-based setup eventually
     pgrep -x polybar >/dev/null || polybar &
 fi
 
-(pkill picom; sleep .5; picom) &
+(
+    pkill picom
+    sleep .5
+    picom
+) &
+(start-searxng || :) &
 /usr/lib/xfce-polkit/xfce-polkit &
 # END AUTOSTART PROGRAMS ######################################################
 
@@ -35,10 +41,10 @@ xss-lock --transfer-sleep-lock -- i3lock --nofork --image /tmp/lockpaper.png &
 
 # GENERAL SETTINGS ############################################################
 # switch caps to ctrl
-setxkbmap -option ctrl:nocaps
+setxkbmap -option ctrl:nocaps &
 
 # make sure i dont see a weird 'X' for cursor
-xsetroot -cursor_name left_ptr
+xsetroot -cursor_name left_ptr &
 # END GENERAL SETTINGS ########################################################
 
 # BSPWM CONFIG ################################################################
