@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+set -e
+
+# show-power-dialog:  prompt user to suspend, reboot, or poweroff
+# deps: rofi or dmenu (fix do prompt fn for dmenu)
+
+PROMPT="What would you like to do?"
+OPTIONS="$(printf '%s\n%s\n%s\n' 'Suspend [make sure no ollama running]' Poweroff Reboot)"
+
+do_prompt() {
+    echo "$OPTIONS" | rofi -dmenu -p "$PROMPT"
+}
+
+selected_opt=$(do_prompt)
+case "$selected_opt" in
+    "Suspend"*) systemctl suspend ;;
+    "Poweroff") systemctl poweroff ;;
+    "Reboot") systemctl reboot ;;
+esac
