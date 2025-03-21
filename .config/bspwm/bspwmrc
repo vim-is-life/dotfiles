@@ -34,6 +34,13 @@ RES=$(xrandr | grep '\*' | awk '{print $1}')!
 convert "$LOCKSCREEN_PAPER" -resize $RES /tmp/lockpaper.png
 xwallpaper --zoom "$DESKTOP_PAPER" &
 xss-lock --transfer-sleep-lock -- i3lock --nofork --image /tmp/lockpaper.png &
+
+# expose desktop paper and lockpaper in case you want to know their paths
+(
+    echo DESKTOP_PAPER="\"$DESKTOP_PAPER\"" >/tmp/whats-the-wallpaper.txt
+    echo LOCKSCREEN_PAPER="\"$LOCKSCREEN_PAPER\"" >>/tmp/whats-the-wallpaper.txt
+) &
+
 # TODO:
 # - get wal set up and then use that leter to config the border color for
 #   inactive and active windows
