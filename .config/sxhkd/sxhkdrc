@@ -14,7 +14,9 @@ super + Escape
 
 # lock screen (note wallpaper is cached to tmp dir on startup)
 super + alt + space
-	i3lock -ei /tmp/lockpaper.png
+	i3lock -ec ab0606
+    # TODO make work better for multimonitor
+	# i3lock -ei /tmp/lockpaper.png
 
 # launch emacs client
 super + e
