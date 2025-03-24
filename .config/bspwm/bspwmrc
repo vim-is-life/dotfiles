@@ -4,7 +4,7 @@
 
 # BSPWM CONFIG ################################################################
 # TODO: adjust this to make a bit more elegant and also to work for hot plugging my laptop into things as well
-~/.local/bin/scripts/utility/handle-monitors &
+# ~/.local/bin/scripts/utility/handle-monitors &
 bspc config remove_disabled_monitors true
 bspc config merge_overlapping_monitors
 
