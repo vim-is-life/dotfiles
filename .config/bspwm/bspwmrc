@@ -1,4 +1,7 @@
 #!/bin/sh
+
+. ~/.config/shell/env_vars
+
 # BSPWM CONFIG ################################################################
 # TODO: adjust this to make a bit more elegant and also to work for hot plugging my laptop into things as well
 ~/.local/bin/scripts/utility/handle-monitors &
@@ -42,10 +45,11 @@ _run() {
 
 _run sxhkd -t 2
 _run pcmanfm -d
-_run ~/.local/bin/scripts/utility/battery-checker
+_run battery-checker
 _run dunst
 _run redshift -l 41.87811:-87.62980
 _run syncthing --allow-newer-config
+_run start-searxng
 if [ "$(hostname)" != "lake-michigan" ]; then
     # TODO: switch to a lemonbar-based setup eventually
     pgrep -x polybar >/dev/null || polybar &
@@ -56,7 +60,6 @@ fi
     sleep .5
     picom
 ) &
-(start-searxng || :) &
 /usr/lib/xfce-polkit/xfce-polkit &
 # END AUTOSTART PROGRAMS ######################################################
 
