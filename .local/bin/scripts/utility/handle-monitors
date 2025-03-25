@@ -1,23 +1,34 @@
 #!/usr/bin/env sh
 
-# WORKSPACES="Main Schl Code Music Agnd Sys Mntr"
-
-handle_laptop_plugged_to_dual_mon_or_no_mon() {
-    LID_STATE=$(awk '{print $2}' </proc/acpi/button/lid/LID/state)
-    if [ "$LID_STATE" = "closed" ]; then
-        xrandr --output DP-1 --primary --right-of DP-2
-        xrandr --output eDP-1 --off
-        bspc monitor DP-1 -d Main Schl Code "●" "●"
-        bspc monitor DP-2 -d "●" "●" Musc Sys Mntr
-    else
-        xrandr --output eDP-1 --on --primary
-    fi
-}
+if [ "$(hostname)" != "pacific" ]; then
+    hostname >/tmp/log
+    bspc monitor -d Main Schl Code "●" "●" "●" "●" Musc Sys Mntr
+    exit 0
+fi
 
 # this part is specific to my setup... this would run on a laptop that is either
 # plugged into two monitors or plugged into no monitors at all
-if [ "$(hostname)" = "pacific" ]; then
-    handle_laptop_plugged_to_dual_mon_or_no_mon
-else
+LID_STATE=$(awk '{print $2}' </proc/acpi/button/lid/LID/state)
+if [ "$LID_STATE" ] && [ "$LID_STATE" != "closed" ]; then
+    xrandr \
+        --output eDP-1 --on --primary \
+        --output DP-1 --off \
+        --output DP-2 --off \
+        --output HDMI-1 --off \
+        --output HDMI-2 --off
+    bspc monitor DP-1 -r
+    bspc monitor DP-2 -r
     bspc monitor -d Main Schl Code "●" "●" "●" "●" Musc Sys Mntr
+else
+    xrandr \
+        --output DP-1 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
+        --output DP-2 --mode 1680x1050 --pos 0x0 --rotate normal \
+        --output eDP-1 --off \
+        --output HDMI-1 --off \
+        --output HDMI-2 --off
+    bspc wm -O DP-1 DP-2
+    bspc monitor eDP-1 -r
+    bspc monitor DP-1 -d Main Schl Code "●" "●"
+    bspc monitor DP-2 -d "●" "●" Music Agnd Sys
+    bspc monitor DP-1 -f
 fi
