@@ -2,10 +2,15 @@
 
 . ~/.config/shell/env_vars
 
+# helper fun to run programs
+_run() {
+    if ! pgrep -x "${1}" >/dev/null; then
+        "$@" &
+    fi
+}
+
 # BSPWM CONFIG ################################################################
 # TODO: adjust this to make a bit more elegant and also to work for hot plugging my laptop into things as well
-# ~/.local/bin/scripts/utility/handle-monitors &
-bspc monitor -d Main Schl Code "●" "●" "●" "●" Musc Sys Mntr
 bspc config remove_disabled_monitors true
 bspc config merge_overlapping_monitors
 
@@ -26,6 +31,7 @@ bspc rule -a Kupfer.py focus=on
 # bspc rule -a pavucontrol state=floating
 bspc rule -a Zathura state=tiled
 bspc rule -a Emacs state=tiled
+~/.local/bin/scripts/utility/handle-monitors
 # END BSPWM CONFIG ############################################################
 # also check out ~/.dotfiles/.config/sxhkd/sxhkdrc
 
@@ -38,20 +44,13 @@ xsetroot -cursor_name left_ptr &
 # END GENERAL SETTINGS ########################################################
 
 # AUTOSTART PROGRAMS ##########################################################
-# helper fun to run programs
-_run() {
-    if ! pgrep -x "${1}" >/dev/null; then
-        "$@" &
-    fi
-}
-
 _run sxhkd -t 2
 _run pcmanfm -d
 _run battery-checker
 _run dunst
 _run redshift -l 41.87811:-87.62980
 _run syncthing --allow-newer-config
-_run start-searxng
+_run ~/.local/bin/scripts/container-scripts/start-searxng
 _run polybar # TODO: switch to a lemonbar-based setup eventually
 
 (
