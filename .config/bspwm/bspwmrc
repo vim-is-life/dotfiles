@@ -52,6 +52,11 @@ _run redshift -l 41.87811:-87.62980
 _run syncthing --allow-newer-config
 _run ~/.local/bin/scripts/container-scripts/start-searxng
 _run polybar # TODO: switch to a lemonbar-based setup eventually
+_run emacs --daemon
+# TODO add something to be able to
+# - launch keepassxc and automove it to Sys workspace
+# - launch btop in alacritty and auto-move it to "Sys" workspace (fullscreened)
+# - start emacs daemon, open emacs frame, open org-agenda view in the frame, and move the frame to the "Agnd" workspace
 
 (
     pkill picom
