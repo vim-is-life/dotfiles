@@ -5,6 +5,7 @@
 # BSPWM CONFIG ################################################################
 # TODO: adjust this to make a bit more elegant and also to work for hot plugging my laptop into things as well
 # ~/.local/bin/scripts/utility/handle-monitors &
+bspc monitor -d Main Schl Code "●" "●" "●" "●" Musc Sys Mntr
 bspc config remove_disabled_monitors true
 bspc config merge_overlapping_monitors
 
@@ -37,6 +38,7 @@ xsetroot -cursor_name left_ptr &
 # END GENERAL SETTINGS ########################################################
 
 # AUTOSTART PROGRAMS ##########################################################
+# helper fun to run programs
 _run() {
     if ! pgrep -x "${1}" >/dev/null; then
         "$@" &
@@ -50,10 +52,7 @@ _run dunst
 _run redshift -l 41.87811:-87.62980
 _run syncthing --allow-newer-config
 _run start-searxng
-if [ "$(hostname)" != "lake-michigan" ]; then
-    # TODO: switch to a lemonbar-based setup eventually
-    pgrep -x polybar >/dev/null || polybar &
-fi
+_run polybar # TODO: switch to a lemonbar-based setup eventually
 
 (
     pkill picom
