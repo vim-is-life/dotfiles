@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+# script to set desktop wallpaper and save the wallpaper for the lock screen
+
+
+# caching wallpaper for lock screen. first look for a favorite-wallpaper.jpg or
+# .png in ~/, otherwise pick a random one
+WALL_DIR=~/Pictures/wallpapers/
+LOCKSCREEN_PAPER="$(find $WALL_DIR -type f | shuf -n1)"
+DESKTOP_PAPER=~/favorite-wallpaper.png
+[ ! -e "$DESKTOP_PAPER" ] && DESKTOP_PAPER=~/favorite-wallpaper.jpg
+[ ! -e "$DESKTOP_PAPER" ] && DESKTOP_PAPER="$(find $WALL_DIR -type f | shuf -n1)"
+
+# expose desktop paper and lockpaper in case you want to know their paths
+echo DESKTOP_PAPER="\"$DESKTOP_PAPER\"" >/tmp/whats-the-wallpaper.txt
+echo LOCKSCREEN_PAPER="\"$LOCKSCREEN_PAPER\"" >>/tmp/whats-the-wallpaper.txt
+
+# setting wallpaper and lockpaper
+RES=$(xrandr | grep '\*' | awk '{print $1}')!
+NUM_DISPLAYS=$(xrandr | grep '\*' | awk '{print $1}' | wc -l)
+
+# for my multimonitor setup on pacific
+if [ $NUM_DISPLAYS -eq 2 ]; then
+    RES=$(xrandr | grep '\*' | awk '{print $1}' | head -n1)!
+fi
+
+convert "$LOCKSCREEN_PAPER" -resize $RES /tmp/lockpaper.png
+xwallpaper --zoom "$DESKTOP_PAPER"

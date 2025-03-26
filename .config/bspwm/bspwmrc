@@ -26,12 +26,13 @@ bspc config automatic_scheme spiral
 # bspc rule -a Chromium desktop='^2'
 bspc rule -a Screenkey manage=off
 bspc rule -a Kupfer.py focus=on
-# FIXME: these two don't seem to work right
-# bspc rule -a blueman-manager state=floating
-# bspc rule -a pavucontrol state=floating
+
 bspc rule -a Zathura state=tiled
 bspc rule -a Emacs state=tiled
-~/.local/bin/scripts/utility/handle-monitors
+
+bspc rule -a mpv desktop='^8' follow=on                       # media workspace
+bspc rule -a Alacritty:btop desktop='^10' follow=on locked=on # sys workspace
+~/.local/bin/scripts/utility/handle-monitors &
 # END BSPWM CONFIG ############################################################
 # also check out ~/.dotfiles/.config/sxhkd/sxhkdrc
 
@@ -52,6 +53,7 @@ _run redshift -l 41.87811:-87.62980
 _run syncthing --allow-newer-config
 _run ~/.local/bin/scripts/container-scripts/start-searxng
 _run polybar # TODO: switch to a lemonbar-based setup eventually
+_run alacritty -T 'btop system monitor' --class Alacritty,btop -e btop
 _run emacs --daemon
 # TODO add something to be able to
 # - launch keepassxc and automove it to Sys workspace
@@ -67,25 +69,8 @@ _run emacs --daemon
 # END AUTOSTART PROGRAMS ######################################################
 
 # WALLPAPERS ##################################################################
-# caching wallpaper for lock screen. first look for a favorite-wallpaper.jpg or
-# .png in ~/, otherwise pick a random one
-WALL_DIR=~/Pictures/wallpapers/
-LOCKSCREEN_PAPER="$(find $WALL_DIR -type f | shuf -n1)"
-DESKTOP_PAPER=~/favorite-wallpaper.png
-[ ! -e "$DESKTOP_PAPER" ] && DESKTOP_PAPER=~/favorite-wallpaper.jpg
-[ ! -e "$DESKTOP_PAPER" ] && DESKTOP_PAPER="$(find $WALL_DIR -type f | shuf -n1)"
-
-# setting wallpaper and lockpaper
-RES=$(xrandr | grep '\*' | awk '{print $1}')!
-convert "$LOCKSCREEN_PAPER" -resize $RES /tmp/lockpaper.png
-xwallpaper --zoom "$DESKTOP_PAPER" &
-xss-lock --transfer-sleep-lock -- i3lock --nofork --image /tmp/lockpaper.png &
-
-# expose desktop paper and lockpaper in case you want to know their paths
-(
-    echo DESKTOP_PAPER="\"$DESKTOP_PAPER\"" >/tmp/whats-the-wallpaper.txt
-    echo LOCKSCREEN_PAPER="\"$LOCKSCREEN_PAPER\"" >>/tmp/whats-the-wallpaper.txt
-) &
+_run ~/.local/bin/scripts/utility/set-wallpaper
+xss-lock --transfer-sleep-lock -- i3lock --nofork --tiling --image /tmp/lockpaper.png &
 
 # TODO:
 # - get wal set up and then use that leter to config the border color for
