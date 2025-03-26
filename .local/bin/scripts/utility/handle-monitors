@@ -1,8 +1,11 @@
 #!/usr/bin/env sh
 
+MON_1_WORKSPACES="Main Schl Code ● ●"
+MON_2_WORKSPACES="● KPXC Mdia Agnd Sys"
+
 if [ "$(hostname)" != "pacific" ]; then
     hostname >/tmp/log
-    bspc monitor -d Main Schl Code "●" "●" "●" "●" Mdia Sys Mntr
+    bspc monitor -d "$(printf "%s %s" "$MON_1_WORKSPACES" "$MON_2_WORKSPACES")"
     exit 0
 fi
 
@@ -18,7 +21,7 @@ if [ "$LID_STATE" ] && [ "$LID_STATE" != "closed" ]; then
         --output HDMI-2 --off
     bspc monitor DP-1 -r
     bspc monitor DP-2 -r
-    bspc monitor -d Main Schl Code "●" "●" "●" "●" Mdia Sys Mntr
+    bspc monitor -d "$(printf "%s %s" "$MON_1_WORKSPACES" "$MON_2_WORKSPACES")"
 else
     xrandr \
         --output DP-1 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
@@ -28,7 +31,9 @@ else
         --output HDMI-2 --off
     bspc wm -O DP-1 DP-2
     bspc monitor eDP-1 -r
-    bspc monitor DP-1 -d Main Schl Code "●" "●"
-    bspc monitor DP-2 -d "●" "●" Mdia Agnd Sys
+    # shellcheck says this is a useless echo, but workspaces act funny unless i
+    # do this
+    bspc monitor DP-1 -d $(echo "$MON_1_WORKSPACES")
+    bspc monitor DP-2 -d $(echo "$MON_2_WORKSPACES")
     bspc monitor DP-1 -f
 fi
