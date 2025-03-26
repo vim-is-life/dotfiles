@@ -30,9 +30,10 @@ bspc rule -a Kupfer.py focus=on
 bspc rule -a Zathura state=tiled
 bspc rule -a Emacs state=tiled
 
+bspc rule -a KeePassXC desktop='^7' locked=on
 bspc rule -a mpv desktop='^8' follow=on                       # media workspace
 bspc rule -a Alacritty:btop desktop='^10' follow=on locked=on # sys workspace
-~/.local/bin/scripts/utility/handle-monitors &
+_run ~/.local/bin/scripts/utility/handle-monitors
 # END BSPWM CONFIG ############################################################
 # also check out ~/.dotfiles/.config/sxhkd/sxhkdrc
 
@@ -54,10 +55,9 @@ _run syncthing --allow-newer-config
 _run ~/.local/bin/scripts/container-scripts/start-searxng
 _run polybar # TODO: switch to a lemonbar-based setup eventually
 _run alacritty -T 'btop system monitor' --class Alacritty,btop -e btop
+_run keepassxc
 _run emacs --daemon
 # TODO add something to be able to
-# - launch keepassxc and automove it to Sys workspace
-# - launch btop in alacritty and auto-move it to "Sys" workspace (fullscreened)
 # - start emacs daemon, open emacs frame, open org-agenda view in the frame, and move the frame to the "Agnd" workspace
 
 (
