@@ -52,6 +52,10 @@ super + shift + h
 	bspc rule -a Alacritty --one-shot state=floating; \
     alacritty -T 'neovim view: sxhkdrc (press ZZ to exit)' -e sh -c "<~/.config/sxhkd/sxhkdrc sed '/TODO/d' | view"
 
+# change the wallpaper without restarting wm
+super + alt + b:
+    ~/.local/bin/scripts/utility/set-wallpaper
+
 ################################################################################
 
 ##### BSPWM HOTKEYS ############################################################
