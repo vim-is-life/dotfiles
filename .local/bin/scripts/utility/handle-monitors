@@ -2,7 +2,7 @@
 
 if [ "$(hostname)" != "pacific" ]; then
     hostname >/tmp/log
-    bspc monitor -d Main Schl Code "●" "●" "●" "●" Musc Sys Mntr
+    bspc monitor -d Main Schl Code "●" "●" "●" "●" Mdia Sys Mntr
     exit 0
 fi
 
@@ -18,7 +18,7 @@ if [ "$LID_STATE" ] && [ "$LID_STATE" != "closed" ]; then
         --output HDMI-2 --off
     bspc monitor DP-1 -r
     bspc monitor DP-2 -r
-    bspc monitor -d Main Schl Code "●" "●" "●" "●" Musc Sys Mntr
+    bspc monitor -d Main Schl Code "●" "●" "●" "●" Mdia Sys Mntr
 else
     xrandr \
         --output DP-1 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
@@ -29,6 +29,6 @@ else
     bspc wm -O DP-1 DP-2
     bspc monitor eDP-1 -r
     bspc monitor DP-1 -d Main Schl Code "●" "●"
-    bspc monitor DP-2 -d "●" "●" Music Agnd Sys
+    bspc monitor DP-2 -d "●" "●" Mdia Agnd Sys
     bspc monitor DP-1 -f
 fi
