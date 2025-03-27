@@ -22,6 +22,7 @@ bspc config borderless_monocle true
 bspc config gapless_monocle true
 bspc config automatic_scheme spiral
 bspc config focus_follows_pointer true
+bspc config pointer_follows_focus true
 
 # bspc rule -a Gimp desktop='^8' state=floating follow=on
 # bspc rule -a Chromium desktop='^2'
@@ -31,7 +32,7 @@ bspc rule -a Kupfer.py focus=on
 bspc rule -a Zathura state=tiled
 bspc rule -a Emacs state=tiled
 
-bspc rule -a KeePassXC desktop='^7' locked=on
+bspc rule -a --one-shot KeePassXC desktop='^7' locked=on -
 bspc rule -a mpv desktop='^8' follow=on                       # media workspace
 bspc rule -a Alacritty:btop desktop='^10' follow=on locked=on # sys workspace
 _run ~/.local/bin/scripts/utility/handle-monitors
