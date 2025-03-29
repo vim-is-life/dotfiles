@@ -5,7 +5,7 @@ MON_2_WORKSPACES="● KPXC Mdia Agnd Sys"
 
 if [ "$(hostname)" != "pacific" ]; then
     hostname >/tmp/log
-    bspc monitor -d "$(printf "%s %s" "$MON_1_WORKSPACES" "$MON_2_WORKSPACES")"
+    bspc monitor -d $(printf "%s %s" "$MON_1_WORKSPACES" "$MON_2_WORKSPACES")
     exit 0
 fi
 
@@ -21,7 +21,7 @@ if [ "$LID_STATE" ] && [ "$LID_STATE" != "closed" ]; then
         --output HDMI-2 --off
     bspc monitor DP-1 -r
     bspc monitor DP-2 -r
-    bspc monitor -d "$(printf "%s %s" "$MON_1_WORKSPACES" "$MON_2_WORKSPACES")"
+    bspc monitor -d $(printf "%s %s" "$MON_1_WORKSPACES" "$MON_2_WORKSPACES")
 else
     xrandr \
         --output DP-1 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
