@@ -75,13 +75,12 @@ _run emacs --daemon
 # - open org-agenda view in the frame
 # - and move the frame to the "Agnd" workspace
 
-# on single monitor setups, we've got to do this to start in 'Main' desktop
-(
+( # on single monitor setups, we've got to do this to start in 'Main' desktop
     _run alacritty -T 'btop system monitor' --class Alacritty,btop -e btop
     bspc desktop '^1' -f
 ) &
 
-( # seems i need to do this because the one-shot rule doesn't work on all devices
+( # seems i need to do this because the one-shot doesn't work on all devices
     _run keepassxc
     sleep 10
     bspc rule -r KeePassXC
