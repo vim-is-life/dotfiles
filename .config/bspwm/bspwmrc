@@ -9,6 +9,14 @@ _run() {
     fi
 }
 
+# helper fun to start picom
+_start_picom() {
+    killall picom
+    # wait for picom to die
+    while pgrep -x picom >/dev/null; do sleep 0.5; done
+    picom &
+}
+
 # BSPWM CONFIG ################################################################
 # TODO: adjust this to make a bit more elegant and also to work for hot plugging my laptop into things as well
 bspc config remove_disabled_monitors true
@@ -32,10 +40,12 @@ bspc rule -a Kupfer.py focus=on
 bspc rule -a Zathura state=tiled
 bspc rule -a Emacs state=tiled
 
-bspc rule -a --one-shot KeePassXC desktop='^7' locked=on -
+# seems i need to do this because the one-shot rule doesn't work on all devices
+bspc rule -a KeePassXC desktop='^7' locked=on
 bspc rule -a mpv desktop='^8' follow=on                       # media workspace
 bspc rule -a Alacritty:btop desktop='^10' follow=on locked=on # sys workspace
 _run ~/.local/bin/scripts/utility/handle-monitors
+
 # END BSPWM CONFIG ############################################################
 # also check out ~/.dotfiles/.config/sxhkd/sxhkdrc
 
@@ -48,6 +58,7 @@ xsetroot -cursor_name left_ptr &
 # END GENERAL SETTINGS ########################################################
 
 # AUTOSTART PROGRAMS ##########################################################
+_start_picom
 _run sxhkd -t 2
 _run pcmanfm -d
 _run battery-checker
@@ -56,18 +67,25 @@ _run redshift -l 41.87811:-87.62980
 _run syncthing --allow-newer-config
 _run ~/.local/bin/scripts/container-scripts/start-searxng
 _run polybar # TODO: switch to a lemonbar-based setup eventually
-_run alacritty -T 'btop system monitor' --class Alacritty,btop -e btop
-_run keepassxc
+_run xfce4-power-manager
 _run emacs --daemon
 # TODO add something to be able to
-# - start emacs daemon, open emacs frame, open org-agenda view in the frame, and move the frame to the "Agnd" workspace
+# - start emacs daemon
+# - open emacs frame
+# - open org-agenda view in the frame
+# - and move the frame to the "Agnd" workspace
 
+# on single monitor setups, we've got to do this to start in 'Main' desktop
 (
-    pkill picom
-    sleep .5
-    picom
+    _run alacritty -T 'btop system monitor' --class Alacritty,btop -e btop
+    bspc desktop '^1' -f
 ) &
-/usr/lib/xfce-polkit/xfce-polkit &
+
+( # seems i need to do this because the one-shot rule doesn't work on all devices
+    _run keepassxc
+    sleep 10
+    bspc rule -r KeePassXC
+) &
 # END AUTOSTART PROGRAMS ######################################################
 
 # WALLPAPERS ##################################################################
