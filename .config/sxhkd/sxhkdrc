@@ -44,11 +44,11 @@ super + shift + d
 	~/.local/bin/scripts/utility/show-man-page-pdf.sh
 
 # open a power dialog: shutdown, reboot, suspend
-ctrl + space
+ctrl + alt + space
 	~/.local/bin/scripts/utility/show-power-dialog
 
 # open a nvim buffer to show the sxhkdrc so you can know your keybinds
-super + shift + h
+ctrl + alt + h
 	bspc rule -a Alacritty --one-shot state=floating; \
     alacritty -T 'neovim view: sxhkdrc (press ZZ to exit)' -e sh -c "<~/.config/sxhkd/sxhkdrc sed '/TODO/d' | view"
 
