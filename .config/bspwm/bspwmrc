@@ -41,9 +41,10 @@ bspc rule -a Zathura state=tiled
 bspc rule -a Emacs state=tiled
 
 # seems i need to do this because the one-shot rule doesn't work on all devices
-bspc rule -a KeePassXC desktop='^7' locked=on
-bspc rule -a mpv desktop='^8' follow=on                       # media workspace
-bspc rule -a Alacritty:btop desktop='^10' follow=on locked=on # sys workspace
+bspc rule -a Alacritty:btop desktop='^10' locked=on # sys workspace
+bspc rule -a easyeffects desktop='^10'              # sys workspace
+bspc rule -a KeePassXC desktop='^7' locked=on       # kpxc workspace
+bspc rule -a mpv desktop='^8' follow=on             # media workspace
 _run ~/.local/bin/scripts/utility/handle-monitors
 
 # END BSPWM CONFIG ############################################################
@@ -68,6 +69,7 @@ _run syncthing --allow-newer-config
 _run ~/.local/bin/scripts/container-scripts/start-searxng
 _run polybar # TODO: switch to a lemonbar-based setup eventually
 _run xfce4-power-manager
+_run easyeffects
 _run emacs --daemon
 # TODO add something to be able to
 # - start emacs daemon
@@ -95,3 +97,7 @@ xss-lock --transfer-sleep-lock -- i3lock --nofork --tiling --image /tmp/lockpape
 # - get wal set up and then use that leter to config the border color for
 #   inactive and active windows
 # END WALLPAPERS ##############################################################
+
+# do this this way because it will work for me on dbl and single monitor
+bspc desktop '^10' -f
+bspc desktop '^1' -f
