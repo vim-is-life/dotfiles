@@ -22,8 +22,12 @@ _start_picom() {
 bspc config remove_disabled_monitors true
 bspc config merge_overlapping_monitors
 
-bspc config border_width 2
-bspc config window_gap 1
+# TODO configure these using the background colors with pywal later
+# bspc config focused_border_color '#B119F7' # purple
+bspc config focused_border_color '#F1130D' # red
+bspc config normal_border_color '#30302f'
+bspc config border_width 3
+bspc config window_gap 2
 bspc config split_ratio 0.46
 
 bspc config borderless_monocle true
