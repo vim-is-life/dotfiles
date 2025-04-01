@@ -70,4 +70,17 @@ m() {
     sleep 0.5 && exit
 }
 
+# the next two, i use to help focus by stopping, say, firefox, and then restarting after
+# Stop (or suspend, as I like to think of it) a process by name
+stop_proc() {
+    proc_name="$1"
+    killall --signal=STOP "$proc_name"
+}
+
+# Continue (or resume, as I like to think of it) a process by name (esp one stopped by the `stop-proc` fn)
+resume_proc() {
+    proc_name="$1"
+    killall --signal=CONT "$proc_name"
+}
+
 # TODO evaluate what other things i should make as functions instead of scripts
