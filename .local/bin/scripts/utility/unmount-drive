@@ -1,5 +1,8 @@
 #!/bin/sh
+set -e
 
 chosen="$(lsblk -al | grep 'media' | awk '{print "/dev/"$1 ": size " $4}' | rofi -dmenu -p 'Which drive to remove?')"
 device_to_unmount="$(echo $chosen | cut -d: -f1)"
-udiskie-umount "$device_to_unmount"
+udiskctl unmount -b "$device_to_unmount" ||
+    notify-send "Could not unmount" "Could not unmount $device_to_unmount"
+notify-send "Unmount complete" "Successfully unmounted $device_to_unmount"
