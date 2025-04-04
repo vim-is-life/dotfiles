@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 MON_1_WORKSPACES="Main Schl Code ● ●"
-MON_2_WORKSPACES="● KPXC Mdia Agnd Sys"
+MON_2_WORKSPACES="KPXC Mtgs Mdia Agnd Sys"
 
 if [ "$(hostname)" != "pacific" ]; then
     hostname >/tmp/log

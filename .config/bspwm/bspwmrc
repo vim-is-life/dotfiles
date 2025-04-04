@@ -47,8 +47,9 @@ bspc rule -a Emacs state=tiled
 # seems i need to do this because the one-shot rule doesn't work on all devices
 bspc rule -a Alacritty:btop desktop='^10' locked=on # sys workspace
 bspc rule -a easyeffects desktop='^10'              # sys workspace
-bspc rule -a KeePassXC desktop='^7' locked=on       # kpxc workspace
-bspc rule -a mpv desktop='^8' follow=on             # media workspace
+bspc rule -a KeePassXC desktop='^6' locked=on       # kpxc workspace
+bspc rule -a mpv desktop='^8' follow=on             # mdia workspace
+bspc rule -a zoom desktop='^7' follow=on            # mtgs workspace
 _run ~/.local/bin/scripts/utility/handle-monitors
 
 # END BSPWM CONFIG ############################################################
