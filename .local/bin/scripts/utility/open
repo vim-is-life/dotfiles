@@ -1,0 +1,47 @@
+#!/usr/bin/env sh
+# open - script to open things. could use xdg-open, but i get tired of having to reconfigure it
+
+# Check if a file was provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <file>"
+    exit 1
+fi
+
+# some of these vars may not be necessary. maybe a YAGNI moment, but, hey
+FILE="$1"
+OPENER=""
+USE_NOHUP=true
+CLOSE_AFTER=true
+
+# Determine the file type and open with the appropriate application
+case "$FILE" in
+*.pdf)
+    OPENER="zathura"
+    ;;
+*.jpg | *.jpeg | *.png | *.gif | *.bmp | *.tiff)
+    OPENER="sxiv"
+    ;;
+*.docx)
+    OPENER="libreoffice --writer"
+    ;;
+*.xlsx)
+    OPENER="libreoffice --calc"
+    ;;
+*.pptx)
+    OPENER="libreoffice --impress"
+    ;;
+*.txt | *.md)
+    OPENER="emacsclient -c"
+    ;;
+*)
+    echo "i dont know how to open that" >&2
+    exit 1
+    ;;
+esac
+
+# shellcheck will tell you to quote OPENER. don't listen to him.
+if $USE_NOHUP; then
+    nohup $OPENER "$FILE" >/dev/null 2>&1 &
+else
+    $OPENER "$FILE" >/dev/null 2>&1 &
+fi
