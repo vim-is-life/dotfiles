@@ -65,7 +65,6 @@ xsetroot -cursor_name left_ptr &
 
 # AUTOSTART PROGRAMS ##########################################################
 _start_picom
-_run sxhkd -t 2
 _run pcmanfm -d
 _run battery-checker
 _run dunst
@@ -106,3 +105,4 @@ xss-lock --transfer-sleep-lock -- i3lock --nofork --tiling --image /tmp/lockpape
 # do this this way because it will work for me on dbl and single monitor
 bspc desktop '^10' -f
 bspc desktop '^1' -f
+_run sxhkd -t 2
