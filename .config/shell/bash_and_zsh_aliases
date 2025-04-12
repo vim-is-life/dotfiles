@@ -13,17 +13,14 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 error)" "$(history|tail -n1|sed -e
 '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 
 # these disabled because my alias ls='exa -lh' doesnt play well with it
 # alias l='ls -CF'
 # alias la='ls -A'
 # alias ll='ls -alF'
-
 
 # start/stop wireless communications
 alias wdown='rfkill block wifi'
@@ -43,6 +40,10 @@ alias wbro='librewolf -p work'
 alias hbro='librewolf -p home'
 alias tbro='librewolf -p throwaway'
 
+# ai stuff
+alias ai_start='(start-openwebui &); doas systemctl start ollama'
+alias ai_stop='(podman stop openwebui &); doas systemctl stop ollama'
+
 # believe this is now defunct
 # for type in 'mla' 'gen' 'hist' 'sci' 'pres'; do
 #     alias "get$type"="get-org-template $type &&
@@ -55,7 +56,6 @@ alias tbro='librewolf -p throwaway'
 #                                        git add .gitignore &&
 #                                        git commit -m 'init commit'"
 # done
-
 
 # devour a window
 alias dsxiv='devour sxiv'
