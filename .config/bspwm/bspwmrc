@@ -103,6 +103,12 @@ xss-lock --transfer-sleep-lock -- i3lock --nofork --tiling --image /tmp/lockpape
 # END WALLPAPERS ##############################################################
 
 # do this this way because it will work for me on dbl and single monitor
-bspc desktop '^10' -f
-bspc desktop '^1' -f
+(
+    bspc desktop '^10' -f
+    sleep 0.1
+    bspc desktop '^1' -f
+) &
 _run sxhkd -t 2
+# lately, been having weird issues with suspend. do this so that i have
+# something i can attach to for restarting bspwm
+_run tmux new-session -ds rescue
