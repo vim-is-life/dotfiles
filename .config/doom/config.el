@@ -196,6 +196,7 @@
 (use-package! calc-rref)
 (setq! calc-prefer-frac t
        calc-symbolic-mode t
+       calc-float-format '(fix 5)
        calc-internal-prec 50)
 
 ;; 2025-03-04: adding package to be able to control mpv from emacs
