@@ -184,7 +184,9 @@
 (setq! org-ellipsis " ▼ "
        org-image-actual-width 500
        org-log-done 'time
-       org-hide-emphasis-markers t)
+       org-hide-emphasis-markers t
+       org-agenda-todo-ignore-deadlines 'near
+       org-agenda-todo-ignore-scheduled 'future)
 
 ;; ox-reveal settings
 (setq! org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
