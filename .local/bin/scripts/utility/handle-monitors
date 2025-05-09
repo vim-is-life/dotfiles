@@ -1,28 +1,10 @@
 #!/usr/bin/env sh
 
+# make sure to not quote the workspace vars when using it with `bspc monitor`
 MON_1_WORKSPACES="Main Schl Code ● ●"
 MON_2_WORKSPACES="KPXC Mtgs Mdia Agnd Sys"
 
-if [ "$(hostname)" != "pacific" ]; then
-    hostname >/tmp/log
-    bspc monitor -d $(printf "%s %s" "$MON_1_WORKSPACES" "$MON_2_WORKSPACES")
-    exit 0
-fi
-
-# this part is specific to my setup... this would run on a laptop that is either
-# plugged into two monitors or plugged into no monitors at all
-LID_STATE=$(awk '{print $2}' </proc/acpi/button/lid/LID/state)
-if [ "$LID_STATE" ] && [ "$LID_STATE" != "closed" ]; then
-    xrandr \
-        --output eDP-1 --on --primary \
-        --output DP-1 --off \
-        --output DP-2 --off \
-        --output HDMI-1 --off \
-        --output HDMI-2 --off
-    bspc monitor DP-1 -r
-    bspc monitor DP-2 -r
-    bspc monitor -d $(printf "%s %s" "$MON_1_WORKSPACES" "$MON_2_WORKSPACES")
-else
+setup_dbl_mons_on_elitebook() {
     xrandr \
         --output DP-1 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
         --output DP-2 --mode 1680x1050 --pos 0x0 --rotate normal \
@@ -31,9 +13,73 @@ else
         --output HDMI-2 --off
     bspc wm -O DP-1 DP-2
     bspc monitor eDP-1 -r
+
     # shellcheck says this is a useless echo, but workspaces act funny unless i
     # do this
-    bspc monitor DP-1 -d $(echo "$MON_1_WORKSPACES")
-    bspc monitor DP-2 -d $(echo "$MON_2_WORKSPACES")
-    bspc monitor DP-1 -f
-fi
+    bspc monitor DP-1 -d $MON_1_WORKSPACES
+    bspc monitor DP-2 -d $MON_2_WORKSPACES
+}
+
+revert_to_laptop_scrn_elitebook() {
+    xrandr \
+        --output eDP-1 --on --primary \
+        --output DP-1 --off \
+        --output DP-2 --off \
+        --output HDMI-1 --off \
+        --output HDMI-2 --off
+
+    bspc monitor DP-1 -r
+    bspc monitor DP-2 -r
+    bspc monitor -d $MON_1_WORKSPACES $MON_2_WORKSPACES
+}
+
+setup_display_on_desktop() {
+    monitor_count="$(xrandr --listactivemonitors | head -n1 | cut -d' ' -f2)"
+    if [ $monitor_count -eq 2 ] || [ -f ~/.enable-dual-monitors ]; then
+        xrandr --output HDMI-0 --off \
+            --output DP-0 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
+            --output DP-1 --off \
+            --output DP-2 --mode 1680x1050 --pos 0x0 --rotate normal \
+            --output DP-3 --off \
+            --output DP-4 --off \
+            --output DP-5 --off
+
+        bspc wm -O DP-0 DP-2
+        bspc monitor DP-0 -d $MON_1_WORKSPACES
+        bspc monitor DP-2 -d $MON_2_WORKSPACES
+    else
+        xrandr --output HDMI-0 --off \
+            --output DP-0 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
+            --output DP-1 --off \
+            --output DP-2 --off \
+            --output DP-3 --off \
+            --output DP-4 --off \
+            --output DP-5 --off
+
+        bspc monitor DP-0 -r
+        bspc monitor DP-2 -r
+        bspc monitor -d $MON_1_WORKSPACES $MON_2_WORKSPACES
+    fi
+}
+
+# behave differently based on the system we're on
+case "$(hostname)" in
+"pacific")
+    # this part is specific to my setup... this would run on a laptop that is either
+    # plugged into two monitors or plugged into no monitors at all
+    LID_STATE=$(awk '{print $2}' </proc/acpi/button/lid/LID/state)
+    if [ "$LID_STATE" ] && [ "$LID_STATE" != "closed" ]; then
+        revert_to_laptop_scrn_elitebook
+    else
+        setup_dbl_mons_on_elitebook
+    fi
+    echo 0 >/tmp/foo
+    ;;
+"arctic")
+    echo 1 >>/tmp/foo
+    setup_display_on_desktop
+    ;;
+*)
+    bspc monitor -d $MON_1_WORKSPACES $MON_2_WORKSPACES
+    ;;
+esac

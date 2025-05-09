@@ -51,7 +51,9 @@ bspc rule -a KeePassXC desktop='^6' locked=on               # kpxc workspace
 bspc rule -a mpv desktop='^8' follow=on                     # mdia workspace
 bspc rule -a "Jellyfin Media Player" desktop='^8' follow=on # mdia workspace
 bspc rule -a zoom desktop='^7' follow=on                    # mtgs workspace
-_run ~/.local/bin/scripts/utility/handle-monitors
+
+# make sure this is run sync, otherwise my monitors don't get defined in the right way
+~/.local/bin/scripts/utility/handle-monitors
 
 # END BSPWM CONFIG ############################################################
 # also check out ~/.dotfiles/.config/sxhkd/sxhkdrc
