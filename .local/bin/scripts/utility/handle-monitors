@@ -2,7 +2,7 @@
 
 # make sure to not quote the workspace vars when using it with `bspc monitor`
 MON_1_WORKSPACES="Main Schl Code ● ●"
-MON_2_WORKSPACES="KPXC Mtgs Mdia Agnd Sys"
+MON_2_WORKSPACES="KPXC Mdia Comm Agnd Sys"
 
 setup_dbl_mons_on_elitebook() {
     xrandr \
