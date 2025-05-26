@@ -36,7 +36,8 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-monokai-spectrum)
+(setq doom-theme 'doom-gruvbox
+      doom-gruvbox-brighter-comments t)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -181,12 +182,14 @@
 ;; 2025-01-27: changed this to try to fix the org-font-lock error because i read
 ;; this might help. this is where i found it out:
 ;; https://old.reddit.com/r/emacs/comments/t1zfgj/file_mode_specification_error_failed_to_define/
+;; 2025-05-26: set all files to archive to archive.org in org dir
 (setq! org-ellipsis " ▼ "
        org-image-actual-width 500
        org-log-done 'time
        org-hide-emphasis-markers t
        org-agenda-todo-ignore-deadlines 'near
-       org-agenda-todo-ignore-scheduled 'future)
+       org-agenda-todo-ignore-scheduled 'future
+       org-archive-location (concat org-directory ".archive.org::datetree/* Finished Tasks"))
 
 ;; ox-reveal settings
 (setq! org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
