@@ -20,12 +20,22 @@
 # --cookies "~/.config/youtube-dl/cookies.txt"
 
 ### workarounds
-# --sleep-interval 3
-# --max-sleep-interval 30
-# --min-sleep-interval 20
+--sleep-interval 3
+--max-sleep-interval 30
+--min-sleep-interval 20
 
 ### subtitle options
 --write-auto-sub
 
 ### post-processing options
 --embed-subs
+
+### metadata stuffs
+--write-description
+--write-info-json
+--write-playlist-metafiles
+--embed-metadata
+--embed-chapters
+
+### cooks
+--cookies-from-browser chromium
