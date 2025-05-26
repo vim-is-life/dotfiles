@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
 # make sure to not quote the workspace vars when using it with `bspc monitor`
-MON_1_WORKSPACES="Main Schl Code ● ●"
-MON_2_WORKSPACES="KPXC Mdia Comm Agnd Sys"
+MON_1_WORKSPACES="Main Schl Code ● Comm"
+MON_2_WORKSPACES="KPXC ● Mdia Agnd Sys"
 
 setup_dbl_mons_on_elitebook() {
     xrandr \

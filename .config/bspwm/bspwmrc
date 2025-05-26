@@ -48,11 +48,11 @@ bspc rule -a Emacs state=tiled
 bspc rule -a Alacritty:btop desktop='^10' locked=on         # sys workspace
 bspc rule -a easyeffects desktop='^10'                      # sys workspace
 bspc rule -a KeePassXC desktop='^6' locked=on               # kpxc workspace
-bspc rule -a mpv desktop='^7' follow=on                     # mdia workspace
-bspc rule -a "Jellyfin Media Player" desktop='^7' follow=on # mdia workspace
-bspc rule -a zoom desktop='^8' follow=on                    # mtgs workspace
-bspc rule -a thunderbird-default desktop='^8' follow=on     # mtgs workspace
-bspc rule -a Signal desktop='^8' follow=on                  # mtgs workspace
+bspc rule -a mpv desktop='^8' follow=on                     # mdia workspace
+bspc rule -a "Jellyfin Media Player" desktop='^8' follow=on # mdia workspace
+bspc rule -a zoom desktop='^5' follow=on                    # mtgs workspace
+bspc rule -a thunderbird-default desktop='^5' follow=on     # mtgs workspace
+bspc rule -a Signal desktop='^5' follow=on                  # mtgs workspace
 
 # make sure this is run sync, otherwise my monitors don't get defined in the right way
 ~/.local/bin/scripts/utility/handle-monitors
