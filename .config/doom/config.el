@@ -288,6 +288,9 @@
 
 
 ;;; Keybinds
+;; 2025-07-13: adding back in jk remap
+(setq! evil-escape-key-sequence "jk")
+
 ;; winner mode
 (map! :leader
       (:prefix ("w" . "window")
