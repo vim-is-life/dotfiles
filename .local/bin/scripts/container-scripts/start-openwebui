@@ -11,6 +11,8 @@
 #  ^^^this fedora magazine one was most helpful
 set -ex
 
+# uncomment below whenever need to update container
+# podman pull ghcr.io/open-webui/open-webui:main
 podman rm openwebui || true
 podman run --name openwebui \
     -d -e 'OLLAMA_BASE_URL=http://localhost:11434' \
