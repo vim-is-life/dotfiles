@@ -1,7 +1,10 @@
 # -*- mode: sh; -*-
 # vim: set filetype=sh:
 
-export JAVA_HOME="/lib/jvm/java-11-openjdk"
+# export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+if [ $(readlink -f /usr/bin/java) ]; then
+    export JAVA_HOME="$(readlink -f /usr/bin/java | sed 's|/bin/java$||')"
+fi
 
 export MPD_HOST="localhost"
 export MPD_PORT="6601"
