@@ -48,14 +48,7 @@ setup_display_on_desktop() {
         bspc monitor DP-0 -d $MON_1_WORKSPACES
         bspc monitor DP-2 -d $MON_2_WORKSPACES
     else
-        xrandr --output HDMI-0 --off \
-            --output DP-0 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
-            --output DP-1 --off \
-            --output DP-2 --off \
-            --output DP-3 --off \
-            --output DP-4 --off \
-            --output DP-5 --off
-
+        xrandr --output HDMI-0 --off --output DP-0 --primary --mode 2560x1440 --pos 0x0 --rotate normal --output DP-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off --output DP-5 --off
         bspc monitor DP-0 -r
         bspc monitor DP-2 -r
         bspc monitor -d $MON_1_WORKSPACES $MON_2_WORKSPACES
