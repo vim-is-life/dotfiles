@@ -76,6 +76,9 @@ _run dunst
 _run redshift -l 41.87811:-87.62980
 _run syncthing --allow-newer-config
 _run ~/.local/bin/scripts/container-scripts/start-searxng
+# also, seems like on fresh restart, my digital audio doesnt show up right. this
+# is quick fix for now
+_run systemctl --user restart wireplumber pipewire-pulse pipewire
 _run polybar # TODO: switch to a lemonbar-based setup eventually
 _run xfce4-power-manager
 _run easyeffects
@@ -114,6 +117,7 @@ xss-lock --transfer-sleep-lock -- i3lock --nofork --tiling --image /tmp/lockpape
     bspc desktop '^1' -f
 ) &
 _run sxhkd -t 2
+
 # lately, been having weird issues with suspend. do this so that i have
 # something i can attach to for restarting bspwm
 _run tmux new-session -ds rescue
