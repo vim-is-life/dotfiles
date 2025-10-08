@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+# script to take a screenshot and save it to the X clipboard
+set -e
+
+# need to do this so that xclip can own the screenshot and it remain in
+# clipboard after this script exits
+xfce4-screenshooter --region --open "xclip -selection clipboard -t image/png -i"
+notify-send "screenshot saved!" "screenshot copied to clipboard"

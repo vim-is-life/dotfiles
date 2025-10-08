@@ -56,6 +56,21 @@ ctrl + alt + h
 super + alt + b:
     ~/.local/bin/scripts/utility/set-wallpaper
 
+# take screenshot of region and save to howm while prompting for file name
+# save to clipboard after
+# TODO make it an option to choose region, window, or whole screen on these
+F5
+	~/.local/bin/scripts/utility/scapture-howm
+
+# take screenshot of region and save to default spot
+# TODO make it an option to choose region, window, or whole screen on these
+alt + F5
+	~/.local/bin/scripts/utility/scapture-screenshot
+
+# take screenshot and save to clipboard
+# TODO make it an option to choose region, window, or whole screen on these
+Print
+	~/.local/bin/scripts/utility/scapture-clipboard
 ################################################################################
 
 ##### BSPWM HOTKEYS ############################################################
