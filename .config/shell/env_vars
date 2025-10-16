@@ -5,6 +5,8 @@
 if [ $(readlink -f /usr/bin/java) ]; then
     export JAVA_HOME="$(readlink -f /usr/bin/java | sed 's|/bin/java$||')"
 fi
+export _JAVA_OPTIONS="-Dsun.java2d.uiScale=1.0 -Dawt.useSystemAAFontSettings=on"
+export _JAVA_AWT_WM_NONREPARENTING=1
 
 export MPD_HOST="localhost"
 export MPD_PORT="6601"
