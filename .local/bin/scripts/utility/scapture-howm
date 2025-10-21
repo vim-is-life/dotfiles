@@ -20,7 +20,7 @@ file_name_no_ext=$($DMENU -p "$PROMPT" || die "no name provided")
 OUT_PATH="$SAVE_DIR/$file_name_no_ext.$FILE_EXT"
 
 # tilde here on purpose. file previews in my emacs seem to work better that way
-COPY_PATH=$(printf "%s" "$OUT_PATH")
+COPY_PATH="~/$HOWM_DIR/$file_name_no_ext.$FILE_EXT"
 
 mkdir -p "$SAVE_DIR"
 xfce4-screenshooter --region --save "$OUT_PATH" || die "there was an error saving ss"
