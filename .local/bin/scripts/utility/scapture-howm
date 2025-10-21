@@ -2,6 +2,13 @@
 # script to take a screenshot and save it to the howm media dir
 set -e
 
+die() {
+    arg0="$1"
+    echo "$arg0" >2
+    notify-send "$arg0"
+    exit 1
+}
+
 # CONFIGURATION
 DMENU="rofi -dmenu -l 0"
 PROMPT="Enter name (no ext) to save with in the howm dir"
@@ -9,14 +16,14 @@ HOWM_DIR="howm/media"
 SAVE_DIR="$HOME/$HOWM_DIR"
 FILE_EXT="jpg"
 
-file_name_no_ext=$($DMENU -p "$PROMPT" || exit 1)
+file_name_no_ext=$($DMENU -p "$PROMPT" || die "no name provided")
 OUT_PATH="$SAVE_DIR/$file_name_no_ext.$FILE_EXT"
 
 # tilde here on purpose. file previews in my emacs seem to work better that way
-COPY_PATH=$(printf "~/$HOWM_DIR/$file_name_no_ext.$FILE_EXT")
+COPY_PATH=$(printf "%s" "$OUT_PATH")
 
 mkdir -p "$SAVE_DIR"
-xfce4-screenshooter --region --save "$OUT_NAME"
+xfce4-screenshooter --region --save "$OUT_PATH" || die "there was an error saving ss"
 
-printf "$COPY_PATH" | xclip -selection c
+printf "%s" "$COPY_PATH" | xclip -selection c
 notify-send "screenshot saved!" "saved at $COPY_PATH\npath copied to clipboard"
