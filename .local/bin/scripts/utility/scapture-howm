@@ -4,26 +4,41 @@ set -e
 
 die() {
     arg0="$1"
-    echo "$arg0" >2
+    echo "$arg0" >&2
     notify-send "$arg0"
     exit 1
 }
 
+# function to clean the user input to ensure no spaces in filename
+ensure_no_whitespace() {
+    user_str="$1"
+    # print out the cleaned input
+    printf '%s' "$user_str" | python3 -c '
+import re, sys
+str_to_clean = sys.stdin.read().strip()
+str_to_clean = re.sub(r"\s+", "-", str_to_clean)
+print(str_to_clean)
+'
+}
+
 # CONFIGURATION
 DMENU="rofi -dmenu -l 0"
-PROMPT="Enter name (no ext) to save with in the howm dir"
+PROMPT="Enter name (no ext, spaces allowed) to save with in the howm dir."
 HOWM_DIR="howm/media"
 SAVE_DIR="$HOME/$HOWM_DIR"
 FILE_EXT="jpg"
 
-file_name_no_ext=$($DMENU -p "$PROMPT" || die "no name provided")
+raw_input="$($DMENU -p "$PROMPT" || die "no name provided")"
+file_name_no_ext="$(ensure_no_whitespace "$raw_input")" ||
+    die "we had issue when running python3 to clean input, exiting"
 OUT_PATH="$SAVE_DIR/$file_name_no_ext.$FILE_EXT"
+echo "$file_name_no_ext" >&2
 
 # tilde here on purpose. file previews in my emacs seem to work better that way
 COPY_PATH="~/$HOWM_DIR/$file_name_no_ext.$FILE_EXT"
 
 mkdir -p "$SAVE_DIR"
-xfce4-screenshooter --region --save "$OUT_PATH" || die "there was an error saving ss"
+xfce4-screenshooter --region --save "$OUT_PATH" || die "there was an error saving ss, exiting"
 
 printf "%s" "$COPY_PATH" | xclip -selection c
 notify-send "screenshot saved!" "saved at $COPY_PATH\npath copied to clipboard"
