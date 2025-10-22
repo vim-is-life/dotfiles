@@ -28,7 +28,7 @@ HOWM_DIR="howm/media"
 SAVE_DIR="$HOME/$HOWM_DIR"
 FILE_EXT="jpg"
 
-raw_input="$($DMENU -p "$PROMPT" || die "no name provided")"
+raw_input="$($DMENU -p "$PROMPT")" || die "no name provided"
 file_name_no_ext="$(ensure_no_whitespace "$raw_input")" ||
     die "we had issue when running python3 to clean input, exiting"
 OUT_PATH="$SAVE_DIR/$file_name_no_ext.$FILE_EXT"
