@@ -76,3 +76,6 @@
 ;; 2025-03-04: adding mpvi package to be able to control mpv from emacs
 (package! mpvi
   :recipe (:local-repo "~/.config/doom/packages/mpvi/"))
+
+;; 2025-12-02: adding this to help with studying
+(package! org-drill)
