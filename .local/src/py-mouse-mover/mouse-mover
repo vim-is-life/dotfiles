@@ -1,8 +1,10 @@
 #!/usr/bin/env sh
 set -e
 
+SCRIPT_LOC=~/.local/src/py-mouse-mover/
+
 # parens on subshell is necessary so that the exit only happens on error
-cd ~/code/py-mouse-mover/ || (echo "couldn't cd to script dir" && exit 1)
+cd "$SCRIPT_LOC" || (echo "couldn't cd to script dir" && exit 1)
 . venv/bin/activate
 
 python mover.py
