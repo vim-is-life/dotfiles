@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+set -e
+
+# parens on subshell is necessary so that the exit only happens on error
+cd ~/code/py-mouse-mover/ || (echo "couldn't cd to script dir" && exit 1)
+. venv/bin/activate
+
+python mover.py
