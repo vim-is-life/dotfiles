@@ -57,6 +57,10 @@ bspc rule -a Signal desktop='^5' follow=on                  # mtgs workspace
 # make sure this is run sync, otherwise my monitors don't get defined in the right way
 ~/.local/bin/scripts/utility/handle-monitors
 
+# do this to make java apps work right
+export _JAVA_AWT_WM_NONREPARENTING=1
+wmname LG3D &
+
 # END BSPWM CONFIG ############################################################
 # also check out ~/.dotfiles/.config/sxhkd/sxhkdrc
 
