@@ -286,6 +286,8 @@
 ;; (setq org-latex-pdf-process
 ;;       '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
 
+;; 2025-12-02: adding org drill stuff
+(setq org-drill-add-random-noise-to-intervals-p t)
 
 ;;; Keybinds
 ;; 2025-07-13: adding back in jk remap
