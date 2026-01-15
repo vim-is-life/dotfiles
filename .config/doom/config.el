@@ -171,6 +171,15 @@
 
 
 ;;; org settings
+;; 2026-01-14: setting tags up
+(setq! org-tags-alist '((:startgroup . nil) ; high level categories, mutually exclusive
+                        ("career_prep" . ?c) ("personal" . ?p)
+                        ("school" . ?s) ("work" . ?w) 
+                        (:endgroup . nil)
+                        (:startgroup . nil) ; different classes something could be for in school
+                        ("anth100" . ?a) ("cs341" . ?c) ("cs377" . ?t)
+                        ("eaes101" . ?e) ("hon301" . ?h) ("math220" . ?m)
+                        (:endgroup . nil)))
 ;; 2025-02-25: setting my todo keywords
 (after! org
   (setq! org-todo-keywords '((sequence
