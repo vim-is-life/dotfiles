@@ -180,6 +180,16 @@
                         ("anth100" . ?a) ("cs341" . ?c) ("cs377" . ?t)
                         ("eaes101" . ?e) ("hon301" . ?h) ("math220" . ?m)
                         (:endgroup . nil)))
+
+;; 2026-01-14: setting stop clock on idle
+(after! org 
+  (setq!
+   ;; consider 10 mins of no emacs interaction to mark you 'idle'
+   org-clock-idle-time 10 
+   ;; after this many seconds of being marked idle, clockout automatically
+   org-clock-auto-clockout-timer (* 60 5))
+  (org-clock-auto-clockout-insinuate)) 
+
 ;; 2025-02-25: setting my todo keywords
 (after! org
   (setq! org-todo-keywords '((sequence
