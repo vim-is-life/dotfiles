@@ -171,18 +171,19 @@
 
 
 ;;; org settings
-;; 2026-01-14: setting tags up
-(setq! org-tags-alist '((:startgroup . nil) ; high level categories, mutually exclusive
+(after! org
+  ;; 2026-01-14: setting tags up
+  ;; ; high level categories, mutually exclusive
+  ;; ; different classes something could be for in school
+  (setq org-tag-alist '((:startgroup . nil)
                         ("career_prep" . ?c) ("personal" . ?p)
-                        ("school" . ?s) ("work" . ?w) 
+                        ("school" . ?s) ("work" . ?w)
                         (:endgroup . nil)
-                        (:startgroup . nil) ; different classes something could be for in school
+                        (:startgroup . nil)
                         ("anth100" . ?a) ("cs341" . ?c) ("cs377" . ?t)
                         ("eaes101" . ?e) ("hon301" . ?h) ("math220" . ?m)
                         (:endgroup . nil)))
-
-;; 2026-01-14: setting stop clock on idle
-(after! org 
+  ;; 2026-01-14: setting stop clock on idle
   (setq!
    ;; consider 10 mins of no emacs interaction to mark you 'idle'
    org-clock-idle-time 10 
