@@ -1,4 +1,4 @@
-background_opacity = 0.8
+# background_opacity = 0.8
 
 [colors.bright]
 black = "#545454"
@@ -24,9 +24,9 @@ yellow = "#c4a000"
 background = "#222222"
 foreground = "#F9F9F9"
 
-[font]
-family = "monospace"
-size = 12.0
+# [font]
+# family = "monospace"
+# size = 12.0
 
 # [font.bold]
 # family = "hack"
