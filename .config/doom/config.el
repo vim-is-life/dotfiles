@@ -172,6 +172,9 @@
 
 ;;; org settings
 (after! org
+  ;; 2026-01-30: fixing python error with org babel
+  (setq org-babel-python-command "python3")
+
   ;; 2026-01-14: setting tags up
   ;; ; high level categories, mutually exclusive
   ;; ; different classes something could be for in school
