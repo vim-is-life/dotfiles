@@ -183,7 +183,7 @@
                         ("school" . ?s) ("work" . ?w)
                         (:endgroup . nil)
                         (:startgroup . nil)
-                        ("anth100" . ?a) ("cs341" . ?c) ("cs377" . ?t)
+                        ("anth100" . ?a) ("cs341" . ?d) ("cs377" . ?t)
                         ("eaes101" . ?e) ("hon301" . ?h) ("math220" . ?m)
                         (:endgroup . nil)))
   ;; 2026-01-14: setting stop clock on idle
