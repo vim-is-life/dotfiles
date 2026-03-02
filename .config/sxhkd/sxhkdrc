@@ -71,6 +71,9 @@ alt + F5
 # TODO make it an option to choose region, window, or whole screen on these
 Print
 	~/.local/bin/scripts/utility/scapture-clipboard
+
+F12
+	librewolf -ProfileManager
 ################################################################################
 
 ##### BSPWM HOTKEYS ############################################################
