@@ -72,8 +72,14 @@ alt + F5
 Print
 	~/.local/bin/scripts/utility/scapture-clipboard
 
+# launch browser with showing profile manager
+F1
+	librewolf -p home
+
+# launch school profile
 F12
-	librewolf -ProfileManager
+	librewolf -p school
+
 ################################################################################
 
 ##### BSPWM HOTKEYS ############################################################
