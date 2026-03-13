@@ -30,6 +30,7 @@ export CALIBRE_USE_SYSTEM_THEME=1
 export MANPAGER="nvim +Man!"
 
 # Path stuff
+export PATH="$HOME/.dotnet/tools:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="$PATH:$HOME/.emacs.d/bin"
