@@ -188,10 +188,11 @@
                         (:endgroup . nil)))
   ;; 2026-01-14: setting stop clock on idle
   (setq!
-   ;; consider 10 mins of no emacs interaction to mark you 'idle'
-   org-clock-idle-time 10 
+   ;; consider X mins of no emacs interaction to mark you 'idle'
+   org-clock-idle-time 45
    ;; after this many seconds of being marked idle, clockout automatically
-   org-clock-auto-clockout-timer (* 60 5))
+   ;; org-clock-auto-clockout-timer (* 60 5)
+   )
   (org-clock-auto-clockout-insinuate)) 
 
 ;; 2025-02-25: setting my todo keywords
