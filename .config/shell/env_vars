@@ -41,6 +41,7 @@ export PATH="$PATH:$HOME/.local/share/gem/ruby/3.1.0/bin"
 export PATH="/sbin:$PATH"
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/go/bin"
+export PATH="$PATH:$HOME/.cargo/bin"
 
 find -L "$HOME/.local/bin/scripts" -type d | while read line; do
     export PATH="$line:$PATH"
