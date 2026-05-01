@@ -189,7 +189,7 @@
   ;; 2026-01-14: setting stop clock on idle
   (setq!
    ;; consider X mins of no emacs interaction to mark you 'idle'
-   org-clock-idle-time 45
+   org-clock-idle-time 60
    ;; after this many seconds of being marked idle, clockout automatically
    ;; org-clock-auto-clockout-timer (* 60 5)
    )
