@@ -72,10 +72,18 @@ alt + F5
 Print
 	~/.local/bin/scripts/utility/scapture-clipboard
 
-# launch browser with showing profile manager
+# launch browser on home profile
 F1
 	librewolf -p home
 
+# launch private window in browser
+shift + F1
+	librewolf -p home --private-window
+
+# launch profile manager of browser
+alt + F1
+	librewolf -ProfileManager
+    
 # launch school profile
 F12
 	librewolf -p school
