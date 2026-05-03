@@ -172,6 +172,9 @@
 
 ;;; org settings
 (after! org
+  ;; 2026-05-03
+  (setq org-clock-sound "~/Music/MASTER BOOT RECORD - C-DEFRAG/mbr-timer-end-sound.wav")
+
   ;; 2026-01-30: fixing python error with org babel
   (setq org-babel-python-command "python3")
 
