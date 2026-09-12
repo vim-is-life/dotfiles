@@ -1,78 +1,378 @@
 #!/usr/bin/env sh
 
-# make sure to not quote the workspace vars when using it with `bspc monitor`
-MON_1_WORKSPACES="Main Schl Code ● Comm"
-MON_2_WORKSPACES="KPXC ● Mdia Agnd Sys"
+###############################################################################
+# MACHINE CONFIG
+###############################################################################
 
-setup_dbl_mons_on_elitebook() {
-    xrandr \
-        --output DP-1 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
-        --output DP-2 --mode 1680x1050 --pos 0x0 --rotate normal \
-        --output eDP-1 --off \
-        --output HDMI-1 --off \
-        --output HDMI-2 --off
-    bspc wm -O DP-1 DP-2
-    bspc monitor eDP-1 -r
+LAPTOP_HOSTNAME="lake-michigan"
+DESKTOP_HOSTNAME="arctic"
 
-    # shellcheck says this is a useless echo, but workspaces act funny unless i
-    # do this
-    bspc monitor DP-1 -d $MON_1_WORKSPACES
-    bspc monitor DP-2 -d $MON_2_WORKSPACES
+# The laptop's built-in display.
+#
+# If this changes on future hardware, this should be the only place that needs
+# updating for the internal panel name.
+LAPTOP_INTERNAL_OUTPUT="eDP-1"
+
+# Workspace layout:
+#
+# Single monitor:
+#
+#   Main Code Schl M2 Comm Mdia KPXC M3 Agnd Sys
+#
+# Dual monitor:
+#
+#   monitor 1: Main Code Schl M2 Comm
+#   monitor 2: Mdia KPXC M3 Agnd Sys
+#
+# On the laptop, the external monitor is monitor 1 and the internal display is
+# monitor 2.
+MON_1_WORKSPACES="Main Schl Code M2 Comm"
+MON_2_WORKSPACES="KPXC M3 Mdia Agnd Sys"
+
+###############################################################################
+# DISPLAY POLICY
+###############################################################################
+
+# This script deliberately owns the complete XRandR configuration while bspwm
+# is running.
+#
+# Any output that is not part of the desired topology is turned off.
+#
+# Normally this would make temporary projector/presentation configurations a
+# concern: rerunning this script would destroy an ad-hoc XRandR layout.
+#
+# That is intentionally NOT a concern for this setup. For presentations or any
+# unusual display configuration that this script does not support, log out of
+# bspwm and use GNOME instead. Therefore, the bspwm configuration can remain
+# deterministic and optimized specifically for normal personal use rather than
+# trying to act as a general-purpose display manager.
+#
+# Supported bspwm layouts for now:
+#
+#   laptop:
+#       - internal display only
+#       - one external + internal display
+#
+#   desktop:
+#       - one monitor only
+#
+# TODO:
+# If the desktop eventually gets a second monitor, give it the same
+# single/dual workspace reconciliation model as the laptop.
+#
+# TODO:
+# The laptop intentionally only supports one external monitor. If multiple
+# external monitors become a real use case later, replace the "first external
+# output" selection with explicit topology handling.
+
+###############################################################################
+# XRANDR HELPERS
+###############################################################################
+
+# Print all physically connected outputs.
+#
+# Example:
+#
+#   eDP-1
+#   HDMI-1
+#
+# This checks physical connection state rather than active-monitor state.
+# That distinction matters for hotplugging because a newly attached output may
+# be connected but not yet enabled.
+connected_outputs() {
+	xrandr --query |
+		awk '$2 == "connected" {print $1}'
 }
 
-revert_to_laptop_scrn_elitebook() {
-    xrandr \
-        --output eDP-1 --on --primary \
-        --output DP-1 --off \
-        --output DP-2 --off \
-        --output HDMI-1 --off \
-        --output HDMI-2 --off
-
-    bspc monitor DP-1 -r
-    bspc monitor DP-2 -r
-    bspc monitor -d $MON_1_WORKSPACES $MON_2_WORKSPACES
+# Print every output known to XRandR, whether connected or disconnected.
+all_outputs() {
+	xrandr --query |
+		awk '$2 == "connected" || $2 == "disconnected" {print $1}'
 }
 
-setup_display_on_desktop() {
-    monitor_count="$(xrandr --listactivemonitors | head -n1 | cut -d' ' -f2)"
-    if [ $monitor_count -eq 2 ] || [ -f ~/.enable-dual-monitors ]; then
-        xrandr --output HDMI-0 --off \
-            --output DP-0 --primary --mode 1680x1050 --pos 1680x0 --rotate normal \
-            --output DP-1 --off \
-            --output DP-2 --mode 1680x1050 --pos 0x0 --rotate normal \
-            --output DP-3 --off \
-            --output DP-4 --off \
-            --output DP-5 --off
-
-        bspc wm -O DP-0 DP-2
-        bspc monitor DP-0 -d $MON_1_WORKSPACES
-        bspc monitor DP-2 -d $MON_2_WORKSPACES
-    else
-        xrandr --output HDMI-0 --off --output DP-0 --primary --mode 2560x1440 --pos 0x0 --rotate normal --output DP-1 --off --output DP-2 --off --output DP-3 --off --output DP-4 --off --output DP-5 --off
-        bspc monitor DP-0 -r
-        bspc monitor DP-2 -r
-        bspc monitor -d $MON_1_WORKSPACES $MON_2_WORKSPACES
-    fi
+# Find the laptop's external display.
+#
+# Do NOT assume DisplayPort. Depending on the adapter, dock, or monitor, the
+# external output may be named DP-1, DP-2, HDMI-1, HDMI-2, etc.
+#
+# Since the supported laptop topology is at most one external monitor, simply
+# select the first physically connected output other than the internal panel.
+laptop_external_output() {
+	connected_outputs |
+		awk -v internal="$LAPTOP_INTERNAL_OUTPUT" '
+            $0 != internal {
+                print
+                exit
+            }
+        '
 }
 
-# behave differently based on the system we're on
-case "$(hostname)" in
-"pacific")
-    # this part is specific to my setup... this would run on a laptop that is either
-    # plugged into two monitors or plugged into no monitors at all
-    LID_STATE=$(awk '{print $2}' </proc/acpi/button/lid/LID/state)
-    if [ "$LID_STATE" ] && [ "$LID_STATE" != "closed" ]; then
-        revert_to_laptop_scrn_elitebook
-    else
-        setup_dbl_mons_on_elitebook
-    fi
-    echo 0 >/tmp/foo
-    ;;
-"arctic")
-    echo 1 >>/tmp/foo
-    setup_display_on_desktop
-    ;;
+# For now the desktop is intentionally assumed to have exactly one connected
+# monitor.
+#
+# TODO:
+# Generalize this if the desktop becomes a multi-monitor machine.
+desktop_output() {
+	connected_outputs | head -n1
+}
+
+# Disable every output except those supplied as arguments.
+#
+# Example:
+#
+#   disable_other_outputs eDP-1 HDMI-1
+#
+# leaves eDP-1 and HDMI-1 alone and turns everything else off.
+disable_other_outputs() {
+	keep_outputs="$*"
+
+	for output in $(all_outputs); do
+		keep=false
+
+		for wanted in $keep_outputs; do
+			if [ "$output" = "$wanted" ]; then
+				keep=true
+				break
+			fi
+		done
+
+		if [ "$keep" = false ]; then
+			xrandr --output "$output" --off
+		fi
+	done
+}
+
+###############################################################################
+# BSPWM DESKTOP HELPERS
+###############################################################################
+
+desktop_exists() {
+	bspc query -D --names |
+		grep -Fxq "$1"
+}
+
+# Create a named desktop if bspwm does not already know about it.
+#
+# This is mainly needed during initial bspwm startup. During a hotplug event the
+# desktops should already exist and will simply be moved between monitors.
+ensure_desktop() {
+	monitor="$1"
+	desktop="$2"
+
+	if ! desktop_exists "$desktop"; then
+		bspc monitor "$monitor" -a "$desktop"
+	fi
+}
+
+ensure_all_desktops() {
+	monitor="$1"
+
+	for desktop in $MON_1_WORKSPACES $MON_2_WORKSPACES; do
+		ensure_desktop "$monitor" "$desktop"
+	done
+}
+
+# Place all desktops onto one monitor while preserving their existing windows
+# and BSP trees.
+#
+# This is intentionally different from:
+#
+#   bspc monitor ... -d ...
+#
+# During hotplugging the desktops already exist. We want to move those desktops
+# rather than redefine the monitor's desktop set.
+put_all_desktops_on() {
+	monitor="$1"
+
+	ensure_all_desktops "$monitor"
+
+	for desktop in $MON_1_WORKSPACES $MON_2_WORKSPACES; do
+		bspc desktop "$desktop" -m "$monitor"
+	done
+}
+
+# Split the existing desktops into the normal 5 + 5 dual-monitor arrangement.
+split_desktops_between() {
+	monitor_1="$1"
+	monitor_2="$2"
+
+	# During initial bspwm startup, establish the named desktops first.
+	ensure_all_desktops "$monitor_1"
+
+	for desktop in $MON_1_WORKSPACES; do
+		bspc desktop "$desktop" -m "$monitor_1"
+	done
+
+	for desktop in $MON_2_WORKSPACES; do
+		bspc desktop "$desktop" -m "$monitor_2"
+	done
+}
+
+###############################################################################
+# LAPTOP
+###############################################################################
+
+setup_laptop_only() {
+	#
+	# Result:
+	#
+	#   +----------------------------------------------------------+
+	#   | eDP-1                                                    |
+	#   | primary                                                  |
+	#   |                                                          |
+	#   | Main Schl Code M2 Comm KPXC M3 Mdia Agnd Sys             |
+	#   +----------------------------------------------------------+
+	#
+
+	# First make sure the surviving monitor is active.
+	#
+	# This is important when transitioning from external + laptop back to just
+	# the laptop.
+	xrandr \
+		--output "$LAPTOP_INTERNAL_OUTPUT" \
+		--auto \
+		--primary \
+		--pos 0x0
+
+	# Move all existing bspwm desktops onto the surviving monitor BEFORE
+	# disabling the external display.
+	#
+	# This gives us explicit control over workspace migration rather than
+	# relying on bspwm's remove_disabled_monitors behavior to decide where they
+	# should go.
+	put_all_desktops_on "$LAPTOP_INTERNAL_OUTPUT"
+
+	# bspwm now has one logical monitor in our desired ordering.
+	bspc wm -O "$LAPTOP_INTERNAL_OUTPUT"
+
+	# Now shut down everything else.
+	disable_other_outputs "$LAPTOP_INTERNAL_OUTPUT"
+}
+
+setup_laptop_external() {
+	external="$1"
+
+	#
+	# Result:
+	#
+	#       LEFT / PRIMARY                    RIGHT
+	#
+	#   +-------------------------+     +-------------------------+
+	#   | external                |     | eDP-1                   |
+	#   |                         |     |                         |
+	#   | Main                    |     | Mdia                    |
+	#   | Schl                    |     | KPXC                    |
+	#   | Code                    |     | M3                      |
+	#   | M2                      |     | Agnd                    |
+	#   | Comm                    |     | Sys                     |
+	#   +-------------------------+     +-------------------------+
+	#
+
+	# Bring both outputs online first.
+	#
+	# The external monitor is always:
+	#
+	#   - left of the laptop
+	#   - primary
+	#
+	# --auto intentionally avoids hard-coding a resolution so different HDMI
+	# or DisplayPort monitors can be hotplugged without modifying this script.
+	xrandr \
+		--output "$external" \
+		--auto \
+		--primary \
+		--pos 0x0 \
+		--output "$LAPTOP_INTERNAL_OUTPUT" \
+		--auto \
+		--right-of "$external"
+
+	# Turn off anything outside the supported two-monitor topology.
+	disable_other_outputs \
+		"$external" \
+		"$LAPTOP_INTERNAL_OUTPUT"
+
+	# Keep bspwm's monitor ordering aligned with the physical layout:
+	#
+	#   external -> laptop
+	#
+	# This also makes next/previous monitor navigation predictable should we
+	# add bindings for it later.
+	bspc wm -O \
+		"$external" \
+		"$LAPTOP_INTERNAL_OUTPUT"
+
+	# Move the existing desktops into their normal groups.
+	split_desktops_between \
+		"$external" \
+		"$LAPTOP_INTERNAL_OUTPUT"
+}
+
+setup_laptop() {
+	external="$(laptop_external_output)"
+
+	if [ -n "$external" ]; then
+		setup_laptop_external "$external"
+	else
+		setup_laptop_only
+	fi
+}
+
+###############################################################################
+# DESKTOP
+###############################################################################
+
+setup_desktop() {
+	monitor="$(desktop_output)"
+
+	if [ -z "$monitor" ]; then
+		echo "handle-monitors: no connected desktop monitor found" >&2
+		return 1
+	fi
+
+	#
+	# For now the desktop intentionally has the simplest possible policy:
+	#
+	#   exactly one connected monitor
+	#   all ten workspaces on that monitor
+	#
+	# We do not currently need hotplugged multi-monitor behavior here.
+	#
+	# TODO:
+	# If the desktop eventually gets a second monitor, reuse the laptop's
+	# 5 + 5 workspace splitting approach.
+
+	xrandr \
+		--output "$monitor" \
+		--auto \
+		--primary \
+		--pos 0x0
+
+	disable_other_outputs "$monitor"
+
+	bspc wm -O "$monitor"
+
+	put_all_desktops_on "$monitor"
+}
+
+###############################################################################
+# MACHINE DISPATCH
+###############################################################################
+
+hostname="$(hostname)"
+
+case "$hostname" in
+"$LAPTOP_HOSTNAME")
+	setup_laptop
+	;;
+
+"$DESKTOP_HOSTNAME")
+	setup_desktop
+	;;
+
 *)
-    bspc monitor -d $MON_1_WORKSPACES $MON_2_WORKSPACES
-    ;;
+	echo \
+		"handle-monitors: no monitor configuration for hostname '$hostname'" \
+		>&2
+	exit 1
+	;;
 esac

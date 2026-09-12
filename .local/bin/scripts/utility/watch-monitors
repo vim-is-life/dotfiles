@@ -1,0 +1,115 @@
+#!/usr/bin/env sh
+
+###############################################################################
+# MONITOR HOTPLUG WATCHER
+###############################################################################
+
+# This watcher intentionally contains no monitor-layout policy.
+#
+# handle-monitors owns all decisions about:
+#
+#   - which outputs should be active
+#   - which output should be primary
+#   - monitor positioning
+#   - bspwm monitor ordering
+#   - workspace placement
+#
+# This script does exactly one thing:
+#
+#   Detect when the set of physically connected XRandR outputs changes and
+#   rerun handle-monitors.
+#
+# We poll XRandR rather than listening directly for DRM/udev events because
+# this is a small X11/bspwm-specific setup and XRandR is ultimately the state
+# that handle-monitors cares about anyway.
+#
+# Polling also avoids having to bridge a system-level udev event back into the
+# correct graphical session with DISPLAY/XAUTHORITY/session environment.
+#
+# A roughly two-second response time is more than adequate for plugging and
+# unplugging monitors manually.
+
+HANDLE_MONITORS="$HOME/.local/bin/scripts/utility/handle-monitors"
+POLL_INTERVAL=2
+SETTLE_TIME=1
+
+
+###############################################################################
+# HELPERS
+###############################################################################
+
+# Return a stable representation of the physically connected outputs.
+#
+# Examples:
+#
+#   eDP-1
+#
+# becomes:
+#
+#   eDP-1
+#
+# and:
+#
+#   HDMI-1
+#   eDP-1
+#
+# becomes, after sorting:
+#
+#   HDMI-1
+#   eDP-1
+#
+# Sorting is important because we care about the SET of connected outputs, not
+# whatever order XRandR happens to print them in.
+connected_outputs() {
+	xrandr --query |
+		awk '$2 == "connected" {print $1}' |
+		sort
+}
+
+
+###############################################################################
+# WATCH LOOP
+###############################################################################
+
+# handle-monitors is already run synchronously from bspwmrc before this watcher
+# starts, so do NOT run it again immediately.
+#
+# Instead, remember the topology that existed when the watcher started.
+previous="$(connected_outputs)"
+
+while sleep "$POLL_INTERVAL"; do
+	current="$(connected_outputs)"
+
+	# Nothing physically changed.
+	if [ "$current" = "$previous" ]; then
+		continue
+	fi
+
+	# Give the kernel/X server a brief moment to finish processing the hotplug.
+	#
+	# This is especially useful with docks/adapters where connector state can
+	# settle shortly after the first change is observed.
+	sleep "$SETTLE_TIME"
+
+	# Read the topology again after the settle period.
+	current="$(connected_outputs)"
+
+	# Reconcile the complete display + bspwm state.
+	#
+	# Run synchronously. Do NOT put this in the background. That ensures another
+	# iteration cannot start reconfiguring monitors while handle-monitors is
+	# still working.
+	if "$HANDLE_MONITORS"; then
+		# Record what actually exists after successful reconciliation.
+		previous="$(connected_outputs)"
+	else
+		echo "watch-monitors: handle-monitors failed" >&2
+
+		# Still update our observed state. Otherwise a persistent failure would
+		# cause us to retry every two seconds indefinitely.
+		#
+		# A future physical plug/unplug will produce another topology change and
+		# therefore another attempt.
+		previous="$current"
+	fi
+done

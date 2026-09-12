@@ -4,17 +4,17 @@
 
 # helper fun to run programs
 _run() {
-    if ! pgrep -x "${1}" >/dev/null; then
-        "$@" &
-    fi
+	if ! pgrep -x "${1}" >/dev/null; then
+		"$@" &
+	fi
 }
 
 # helper fun to start picom
 _start_picom() {
-    killall picom
-    # wait for picom to die
-    while pgrep -x picom >/dev/null; do sleep 0.5; done
-    picom &
+	killall picom
+	# wait for picom to die
+	while pgrep -x picom >/dev/null; do sleep 0.5; done
+	picom &
 }
 
 # BSPWM CONFIG ################################################################
@@ -55,7 +55,11 @@ bspc rule -a thunderbird-default desktop='^5' follow=on     # mtgs workspace
 bspc rule -a Signal desktop='^5' follow=on                  # mtgs workspace
 
 # make sure this is run sync, otherwise my monitors don't get defined in the right way
+# Configure whatever monitors exist at initial bspwm startup.
 ~/.local/bin/scripts/utility/handle-monitors
+
+# Afterwards, reconcile again whenever physical monitor connectivity changes.
+_run ~/.local/bin/scripts/utility/watch-monitors
 
 # do this to make java apps work right
 export _JAVA_AWT_WM_NONREPARENTING=1
@@ -94,14 +98,14 @@ _run emacs --daemon
 # - and move the frame to the "Agnd" workspace
 
 ( # on single monitor setups, we've got to do this to start in 'Main' desktop
-    _run alacritty -T 'btop system monitor' --class Alacritty,btop -e btop
-    bspc desktop '^1' -f
+	_run alacritty -T 'btop system monitor' --class Alacritty,btop -e btop
+	bspc desktop '^1' -f
 ) &
 
 ( # seems i need to do this because the one-shot doesn't work on all devices
-    _run keepassxc
-    sleep 10
-    bspc rule -r KeePassXC
+	_run keepassxc
+	sleep 10
+	bspc rule -r KeePassXC
 ) &
 # END AUTOSTART PROGRAMS ######################################################
 
@@ -116,9 +120,9 @@ xss-lock --transfer-sleep-lock -- i3lock --nofork --tiling --image /tmp/lockpape
 
 # do this this way because it will work for me on dbl and single monitor
 (
-    bspc desktop '^10' -f
-    sleep 0.1
-    bspc desktop '^1' -f
+	bspc desktop '^10' -f
+	sleep 0.1
+	bspc desktop '^1' -f
 ) &
 _run sxhkd -t 2
 
