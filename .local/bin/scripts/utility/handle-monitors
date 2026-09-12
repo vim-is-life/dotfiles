@@ -202,6 +202,12 @@ put_all_workspaces_on() {
 		for workspace in $MON_1_WORKSPACES $MON_2_WORKSPACES; do
 			bspc desktop "$workspace" -m "$monitor"
 		done
+
+		# Moving workspaces between monitors does not necessarily preserve
+		# our canonical ordering, so explicitly restore it afterward.
+		bspc monitor "$monitor" -o \
+			$MON_1_WORKSPACES \
+			$MON_2_WORKSPACES
 	fi
 }
 
@@ -228,6 +234,10 @@ split_workspaces_between() {
 		for workspace in $MON_2_WORKSPACES; do
 			bspc desktop "$workspace" -m "$monitor_2"
 		done
+
+		# Explicitly restore the configured order on both monitors.
+		bspc monitor "$monitor_1" -o $MON_1_WORKSPACES
+		bspc monitor "$monitor_2" -o $MON_2_WORKSPACES
 	fi
 }
 
