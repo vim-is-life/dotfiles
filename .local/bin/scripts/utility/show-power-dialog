@@ -5,7 +5,7 @@ set -e
 # deps: rofi or dmenu (fix do prompt fn for dmenu)
 
 PROMPT="What would you like to do?"
-OPTIONS="$(printf '%s\n%s\n%s\n' 'Suspend [make sure no ollama running]' Poweroff Reboot)"
+OPTIONS="$(printf '%s\n%s\n%s\n%s\n' 'Suspend [make sure no ollama running]' Hibernate Poweroff Reboot)"
 
 do_prompt() {
     echo "$OPTIONS" | rofi -dmenu -p "$PROMPT"
@@ -14,6 +14,7 @@ do_prompt() {
 selected_opt=$(do_prompt)
 case "$selected_opt" in
     "Suspend"*) systemctl suspend ;;
+    "Hibernate") systemctl hibernate ;;
     "Poweroff") systemctl poweroff ;;
     "Reboot") systemctl reboot ;;
 esac
