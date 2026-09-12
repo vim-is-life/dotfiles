@@ -55,7 +55,7 @@ bspc rule -a Signal desktop='^5' follow=on                  # mtgs workspace
 
 # make sure this is run sync, otherwise my monitors don't get defined in the right way
 # Configure whatever monitors exist at initial bspwm startup.
-~/.local/bin/scripts/utility/handle-monitors
+~/.local/bin/scripts/utility/handle-monitors --first-run
 
 # Afterwards, reconcile again whenever physical monitor connectivity changes.
 _run ~/.local/bin/scripts/utility/watch-monitors

@@ -29,10 +29,43 @@ LAPTOP_INTERNAL_OUTPUT="eDP-1"
 MON_1_WORKSPACES="Main Schl Code M2 Comm"
 MON_2_WORKSPACES="KPXC M3 Mdia Agnd Sys"
 
-# bspwm creates an initial workspace named "Desktop" before bspwmrc runs.
-# Once our configured workspaces exist, remove that initial workspace if it is
-# still present and empty.
-BSPWM_INITIAL_WORKSPACE="Desktop"
+###############################################################################
+# INVOCATION MODE
+###############################################################################
+
+# During initial bspwm startup, call:
+#
+#   handle-monitors --first-run
+#
+# This causes the script to use:
+#
+#   bspc monitor ... -d ...
+#
+# to explicitly define the initial workspace set. Doing this naturally replaces
+# bspwm's bootstrap "Desktop" workspace.
+#
+# During later hotplug events, call:
+#
+#   handle-monitors
+#
+# without --first-run. Existing workspaces are then moved between monitors with:
+#
+#   bspc desktop ... -m ...
+#
+# so their windows and BSP trees are preserved.
+
+FIRST_RUN=false
+
+case "${1:-}" in
+"") ;;
+--first-run)
+	FIRST_RUN=true
+	;;
+*)
+	echo "handle-monitors: unknown argument '$1'" >&2
+	exit 2
+	;;
+esac
 
 ###############################################################################
 # DISPLAY POLICY
@@ -105,15 +138,15 @@ all_outputs() {
 laptop_external_output() {
 	connected_outputs |
 		awk -v internal="$LAPTOP_INTERNAL_OUTPUT" '
-            $0 != internal {
-                print
-                exit
-            }
-        '
+			$0 != internal {
+				print
+				exit
+			}
+		'
 }
 
-# For now the workstation is intentionally assumed to have exactly one connected
-# monitor.
+# For now the workstation is intentionally assumed to have exactly one
+# connected monitor.
 #
 # TODO:
 # Generalize this if the workstation becomes a multi-monitor machine.
@@ -151,103 +184,51 @@ disable_other_outputs() {
 # BSPWM WORKSPACE HELPERS
 ###############################################################################
 
-workspace_exists() {
-	bspc query -D --names |
-		grep -Fxq "$1"
-}
-
-workspace_is_empty() {
-	! bspc query -N -d "$1" | grep -q .
-}
-
-# Create a named workspace if bspwm does not already know about it.
+# Put all configured workspaces onto one monitor.
 #
-# This is mainly needed during initial bspwm startup. During a hotplug event the
-# workspaces should already exist and will simply be moved between monitors.
-ensure_workspace() {
-	monitor="$1"
-	workspace="$2"
-
-	if ! workspace_exists "$workspace"; then
-		# "desktop" is bspwm's CLI terminology for what this configuration calls
-		# a workspace.
-		bspc monitor "$monitor" -a "$workspace"
-	fi
-}
-
-ensure_all_workspaces() {
-	monitor="$1"
-
-	for workspace in $MON_1_WORKSPACES $MON_2_WORKSPACES; do
-		ensure_workspace "$monitor" "$workspace"
-	done
-}
-
-# bspwm starts with an initial workspace named "Desktop" before bspwmrc runs.
-# Our old setup replaced the monitor's workspace list with `bspc monitor -d`,
-# which implicitly got rid of it. The hotplug-safe setup instead adds/moves
-# workspaces, so that initial workspace would otherwise survive as an 11th
-# workspace.
+# On initial bspwm startup, explicitly define the complete workspace set using
+# `bspc monitor -d`. This replaces bspwm's bootstrap workspace.
 #
-# Remove only that known bootstrap workspace, and only when it is empty. If it
-# somehow contains a window, leave it alone and warn rather than destroying or
-# unexpectedly moving user state.
-remove_initial_workspace() {
-	workspace="$BSPWM_INITIAL_WORKSPACE"
-
-	if ! workspace_exists "$workspace"; then
-		return 0
-	fi
-
-	if workspace_is_empty "$workspace"; then
-		# "desktop" is bspwm's CLI terminology for removing a workspace.
-		bspc desktop "$workspace" -r
-	else
-		echo \
-			"handle-monitors: initial workspace '$workspace' is not empty; leaving it in place" \
-			>&2
-	fi
-}
-
-# Place all workspaces onto one monitor while preserving their existing windows
-# and BSP trees.
-#
-# This is intentionally different from:
-#
-#   bspc monitor ... -d ...
-#
-# During hotplugging the workspaces already exist. We want to move those
-# workspaces rather than redefine the monitor's workspace set.
+# During later hotplug events, preserve the existing workspaces and move them
+# onto the surviving monitor.
 put_all_workspaces_on() {
 	monitor="$1"
 
-	ensure_all_workspaces "$monitor"
-
-	for workspace in $MON_1_WORKSPACES $MON_2_WORKSPACES; do
-		# "desktop" is bspwm's CLI terminology for a workspace selector.
-		bspc desktop "$workspace" -m "$monitor"
-	done
-
-	remove_initial_workspace
+	if [ "$FIRST_RUN" = true ]; then
+		bspc monitor "$monitor" -d \
+			$MON_1_WORKSPACES \
+			$MON_2_WORKSPACES
+	else
+		for workspace in $MON_1_WORKSPACES $MON_2_WORKSPACES; do
+			bspc desktop "$workspace" -m "$monitor"
+		done
+	fi
 }
 
-# Split the existing workspaces into the normal 5 + 5 dual-monitor arrangement.
+# Split the configured workspaces into the normal 5 + 5 dual-monitor
+# arrangement.
+#
+# During initial bspwm startup, define the workspace sets directly on their
+# monitors.
+#
+# During later hotplug events, move the already-existing workspaces so their
+# windows and BSP trees are preserved.
 split_workspaces_between() {
 	monitor_1="$1"
 	monitor_2="$2"
 
-	# During initial bspwm startup, establish the named workspaces first.
-	ensure_all_workspaces "$monitor_1"
+	if [ "$FIRST_RUN" = true ]; then
+		bspc monitor "$monitor_1" -d $MON_1_WORKSPACES
+		bspc monitor "$monitor_2" -d $MON_2_WORKSPACES
+	else
+		for workspace in $MON_1_WORKSPACES; do
+			bspc desktop "$workspace" -m "$monitor_1"
+		done
 
-	for workspace in $MON_1_WORKSPACES; do
-		bspc desktop "$workspace" -m "$monitor_1"
-	done
-
-	for workspace in $MON_2_WORKSPACES; do
-		bspc desktop "$workspace" -m "$monitor_2"
-	done
-
-	remove_initial_workspace
+		for workspace in $MON_2_WORKSPACES; do
+			bspc desktop "$workspace" -m "$monitor_2"
+		done
+	fi
 }
 
 ###############################################################################
@@ -276,12 +257,10 @@ setup_laptop_only() {
 		--primary \
 		--pos 0x0
 
-	# Move all existing bspwm workspaces onto the surviving monitor BEFORE
-	# disabling the external display.
+	# On initial startup this defines the complete workspace set.
 	#
-	# This gives us explicit control over workspace migration rather than
-	# relying on bspwm's remove_disabled_monitors behavior to decide where they
-	# should go.
+	# During hotplug reconciliation this moves all existing workspaces onto the
+	# surviving monitor before the external output is disabled.
 	put_all_workspaces_on "$LAPTOP_INTERNAL_OUTPUT"
 
 	# bspwm now has one logical monitor in our desired ordering.
@@ -302,9 +281,9 @@ setup_laptop_external() {
 	#   +-------------------------+     +-------------------------+
 	#   | external                |     | eDP-1                   |
 	#   |                         |     |                         |
-	#   | Main                    |     | Mdia                    |
-	#   | Schl                    |     | KPXC                    |
-	#   | Code                    |     | M3                      |
+	#   | Main                    |     | KPXC                    |
+	#   | Schl                    |     | M3                      |
+	#   | Code                    |     | Mdia                    |
 	#   | M2                      |     | Agnd                    |
 	#   | Comm                    |     | Sys                     |
 	#   +-------------------------+     +-------------------------+
@@ -343,7 +322,10 @@ setup_laptop_external() {
 		"$external" \
 		"$LAPTOP_INTERNAL_OUTPUT"
 
-	# Move the existing workspaces into their normal groups.
+	# On initial startup, explicitly define each monitor's workspace set.
+	#
+	# During later hotplug events, move the existing workspaces into their
+	# normal groups.
 	split_workspaces_between \
 		"$external" \
 		"$LAPTOP_INTERNAL_OUTPUT"
