@@ -13,11 +13,16 @@ set -ex
 
 # uncomment below whenever need to update container
 # podman pull ghcr.io/open-webui/open-webui:main
-podman rm openwebui || true
+
+# remove old image, even if running
+podman rm -f openwebui || true
+
 podman run --name openwebui \
-    -d -e 'OLLAMA_BASE_URL=http://localhost:11434' \
-    -e 'ANONYMIZED_TELEMETRY=False' \
-    -v open-webui:/app/backend/data \
-    --network=host \
-    --restart always \
-    ghcr.io/open-webui/open-webui:main
+	-d \
+	-e 'ENABLE_WEB_SERACH=True' \
+	-e 'OLLAMA_BASE_URL=http://localhost:11434' \
+	-e 'ANONYMIZED_TELEMETRY=False' \
+	-v open-webui:/app/backend/data \
+	--network=host \
+	--restart always \
+	ghcr.io/open-webui/open-webui:main
