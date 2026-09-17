@@ -79,3 +79,9 @@
 
 ;; 2025-12-02: adding this to help with studying
 (package! org-drill)
+
+;; 2026-09-17: adding typst support to emacs for resume
+(package! typst-ts-mode
+  :recipe (:host codeberg :repo "meow_king/typst-ts-mode"))
+(package! tinymist
+  :recipe (:host github :repo "Myriad-Dreamin/tinymist"))
