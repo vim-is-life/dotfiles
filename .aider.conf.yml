@@ -48,7 +48,7 @@ model: qwen_small
 #set-env: xxx
 ## Specify multiple values like this:
 set-env:
-  - OLLAMA_API_BASE=http://localhost:11434
+  - OLLAMA_API_BASE=http://arctic:11434
 
 ## Set an API key for a provider (eg: --api-key provider=<key> sets PROVIDER_API_KEY=<key>)
 api-key: OLLAMA_API_KEY=
