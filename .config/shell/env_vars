@@ -29,6 +29,10 @@ export CALIBRE_USE_SYSTEM_THEME=1
 # 2025-01-26: setting neovim as manpager
 export MANPAGER="nvim +Man!"
 
+# 2026-09-20: setting variables for containers i run
+export SEARXNG_PORT=10000
+export OPENWEBUI_PORT=10001
+
 # Path stuff
 export PATH="$HOME/.dotnet/tools:$PATH"
 export PATH="$HOME/.local/bin:$PATH"

@@ -19,6 +19,7 @@ podman rm -f openwebui || true
 
 podman run --name openwebui \
 	-d \
+	-e "PORT=$OPENWEBUI_PORT" \
 	-e 'ENABLE_WEB_SERACH=True' \
 	-e 'OLLAMA_BASE_URL=http://localhost:11434' \
 	-e 'ANONYMIZED_TELEMETRY=False' \
