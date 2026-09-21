@@ -99,34 +99,34 @@
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 
 ;; vterm
-(setq! vterm-shell "/usr/bin/zsh")
+(setq vterm-shell "/usr/bin/zsh")
 
 ;; docview settings
-(setq! doc-view-continuous t)
+(setq doc-view-continuous t)
 
 ;; 2024-12-04: display time and doom modeline settings
 (display-time-mode 1)                                     ; set display-time mode to be on for time in modeline
-(setq! display-time-24hr-format t
-       display-time-mail-string "")
-(setq! doom-modeline-buffer-file-name-style 'buffer-name  ; only show unique buffer names
-       doom-modeline-major-mode-icon t                    ; show an icon for filetype
-       doom-modeline-enable-word-count t                  ; enable word count on selections
-       doom-modeline-continuous-word-count-modes          ; show word count all the time for these modes
-       '(markdown-mode gfm-mode org-mode))
+(setq display-time-24hr-format t
+      display-time-mail-string "")
+(setq doom-modeline-buffer-file-name-style 'buffer-name  ; only show unique buffer names
+      doom-modeline-major-mode-icon t                    ; show an icon for filetype
+      doom-modeline-enable-word-count t                  ; enable word count on selections
+      doom-modeline-continuous-word-count-modes          ; show word count all the time for these modes
+      '(markdown-mode gfm-mode org-mode))
 
 ;; emms
 (emms-all)
 (emms-default-players)
 ;; (emms-mode-line 1)
 ;; (emms-playing-time 1)
-(setq! emms-source-file-default-directory (concat "/media/" user-login-name "/escudo/Music/")
-       emms-playlist-buffer-name "*Music*"
-       emms-info-asynchronously t
-       emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find)
+(setq emms-source-file-default-directory (concat "/media/" user-login-name "/escudo/Music/")
+      emms-playlist-buffer-name "*Music*"
+      emms-info-asynchronously t
+      emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find)
 
 ;; stuff for c
 (after! ccls
-  (setq! ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
+  (setq ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
   (set-lsp-priority! 'ccls 2)
   (set-formatter! 'my-clang-fmt
     '("clang-format --style=\"{BasedOnStyle: llvm, IndentWidth: 4}\"")))
@@ -139,23 +139,23 @@
   :custom (golden-ratio-exclude-modes '(occur-mode calendar-mode))
   :custom (golden-ratio-exclude-buffer-regexp '(".*repl.*"
                                                 "*doom:.*"))
-  :config (setq! golden-ratio-auto-scale t))
+  :config (setq golden-ratio-auto-scale t))
 
 ;; 2024-09-15: configuring dirvish quick access entries
 (after! dirvish
-  (setq! dirvish-quick-access-entries
-         `(("h" "~/"                                "Home")
-           ("e" ,user-emacs-directory               "Emacs user directory")
-           ("e" "~/.dotfiles/.config/doom/"         "Doom user directory")
-           ("c" "~/code/"                           "Code")
-           ("d" "~/Downloads/"                      "Downloads")
-           ("D" "~/Documentation/"                  "Program and language documentation")
-           ("x" "~/.dotfiles/"                      "Dotfiles")
-           ("m" ,(concat "/media/" user-login-name) "Mounted drives")
-           ("l" "~/Music/"                          "Local music")
-           ("M" ,(concat "/media/" user-login-name
-                         "/escudo/Music/")          "Music on drive")
-           ("t" "~/.local/share/Trash/files/"       "Trash"))))
+  (setq dirvish-quick-access-entries
+        `(("h" "~/"                                "Home")
+          ("e" ,user-emacs-directory               "Emacs user directory")
+          ("e" "~/.dotfiles/.config/doom/"         "Doom user directory")
+          ("c" "~/code/"                           "Code")
+          ("d" "~/Downloads/"                      "Downloads")
+          ("D" "~/Documentation/"                  "Program and language documentation")
+          ("x" "~/.dotfiles/"                      "Dotfiles")
+          ("m" ,(concat "/media/" user-login-name) "Mounted drives")
+          ("l" "~/Music/"                          "Local music")
+          ("M" ,(concat "/media/" user-login-name
+                        "/escudo/Music/")          "Music on drive")
+          ("t" "~/.local/share/Trash/files/"       "Trash"))))
 
 ;; 2025-02-03: adding ledger reports that i commonly use
 ;; want to add a report for budget, for checking card, and for seeing real checking vs real card
@@ -190,7 +190,7 @@
                         ("eaes101" . ?e) ("hon301" . ?h) ("math220" . ?m)
                         (:endgroup . nil)))
   ;; 2026-01-14: setting stop clock on idle
-  (setq!
+  (setq
    ;; consider X mins of no emacs interaction to mark you 'idle'
    org-clock-idle-time 60
    ;; after this many seconds of being marked idle, clockout automatically
@@ -201,36 +201,36 @@
 
 ;; 2025-02-25: setting my todo keywords
 (after! org
-  (setq! org-todo-keywords '((sequence
-                              "TODO(t)" "PLAN(p)" "PROJ(j)" "LOOP(r)" "STARTED(s)"
-                              "|" "DONE(d)" "NOFINISH(n)")
-                             (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)" "[!](N)"))
-         org-agenda-start-on-weekday 1))
+  (setq org-todo-keywords '((sequence
+                             "TODO(t)" "PLAN(p)" "PROJ(j)" "LOOP(r)" "STARTED(s)"
+                             "|" "DONE(d)" "NOFINISH(n)")
+                            (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)" "[!](N)"))
+        org-agenda-start-on-weekday 1))
 
 ;; 2025-01-27: changed this to try to fix the org-font-lock error because i read
 ;; this might help. this is where i found it out:
 ;; https://old.reddit.com/r/emacs/comments/t1zfgj/file_mode_specification_error_failed_to_define/
 ;; 2025-05-26: set all files to archive to archive.org in org dir
-(setq! org-ellipsis " ▼ "
-       org-image-actual-width 500
-       org-log-done 'time
-       org-hide-emphasis-markers t
-       org-agenda-todo-ignore-deadlines 'near
-       org-agenda-todo-ignore-scheduled 'future
-       org-archive-location (concat org-directory ".archive.org::datetree/* Finished Tasks"))
+(setq org-ellipsis " ▼ "
+      org-image-actual-width 500
+      org-log-done 'time
+      org-hide-emphasis-markers t
+      org-agenda-todo-ignore-deadlines 'near
+      org-agenda-todo-ignore-scheduled 'future
+      org-archive-location (concat org-directory ".archive.org::datetree/* Finished Tasks"))
 
 ;; ox-reveal settings
-(setq! org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+(setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
 
 ;; org-pomodoro settings
-(setq! org-pomodoro-length 25)
+(setq org-pomodoro-length 25)
 
 ;; calc settings
 (use-package! calc-rref)
-(setq! calc-prefer-frac t
-       calc-symbolic-mode t
-       calc-float-format '(fix 5)
-       calc-internal-prec 50)
+(setq calc-prefer-frac t
+      calc-symbolic-mode t
+      calc-float-format '(fix 5)
+      calc-internal-prec 50)
 
 ;; 2025-03-04: adding package to be able to control mpv from emacs
 ;; TODO find way to have mpvi pop up the controls in a small buffer when opening the mpvi-seek interface
@@ -298,7 +298,7 @@
 (use-package! howm
   ;; :mode ("_howm\\.org\\'" . howm-mode)
   :config (progn
-            (setq!
+            (setq
              howm-file-ext "_howm.org"
              howm-directory "~/howm/"
              howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
@@ -340,7 +340,7 @@
 
 ;;; Keybinds
 ;; 2025-07-13: adding back in jk remap
-(setq! evil-escape-key-sequence "jk")
+(setq evil-escape-key-sequence "jk")
 
 ;; winner mode
 (map! :leader
