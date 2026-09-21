@@ -83,7 +83,7 @@ _run battery-checker
 _run dunst
 _run redshift -l 41.87811:-87.62980
 _run syncthing --allow-newer-config
-_run ~/.local/bin/scripts/container-scripts/start-searxng
+# _run ~/.local/bin/scripts/container-scripts/start-searxng
 # also, seems like on fresh restart, my digital audio doesnt show up right. this
 # is quick fix for now
 _run systemctl --user restart wireplumber pipewire-pulse pipewire
