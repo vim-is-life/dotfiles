@@ -47,13 +47,11 @@ model: qwen_small
 ## Set an environment variable (to control API settings, can be used multiple times)
 #set-env: xxx
 ## Specify multiple values like this:
-#set-env:
-#  - xxx
-#  - yyy
-#  - zzz
+set-env:
+  - OLLAMA_API_BASE=http://localhost:11434
 
 ## Set an API key for a provider (eg: --api-key provider=<key> sets PROVIDER_API_KEY=<key>)
-#api-key: xxx
+api-key: OLLAMA_API_KEY=
 ## Specify multiple values like this:
 #api-key:
 #  - xxx
@@ -76,9 +74,9 @@ model: qwen_small
 #alias: xxx
 ## Specify multiple values like this:
 alias:
-  - qwen_small=ollama_chat/qwen2.5-coder:7b
-  - qwen_medium=ollama_chat/qwen2.5-coder:7b
-  - llama=ollama_chat/llama3:8b
+  - qwen_small:ollama_chat/qwen2.5-coder:7b
+  - qwen_medium:ollama_chat/qwen2.5-coder:14b
+  - llama:ollama_chat/llama3:8b
 
 ## Set the reasoning_effort API parameter (default: not set)
 #reasoning-effort: xxx
@@ -87,7 +85,7 @@ alias:
 #thinking-tokens: xxx
 
 ## Verify the SSL cert when connecting to models (default: True)
-#verify-ssl: true
+verify-ssl: false
 
 ## Timeout in seconds for API calls (default: None)
 #timeout: xxx

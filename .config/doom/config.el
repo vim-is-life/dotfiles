@@ -292,7 +292,10 @@
 
   :config
   (setq aidermacs-default-chat-mode 'architect
-        aidermacs-default-model "ollama_chat/qwen2.5-coder:7b"))
+        aidermacs-default-model "ollama_chat/qwen2.5-coder:7b")
+
+  :hook
+  (aidermacs-mode . visual-line-mode))
 
 (after! aidermacs
   (add-hook! 'aidermacs-mode-hook
