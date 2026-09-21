@@ -43,5 +43,5 @@ export PATH="$PATH:$HOME/go/bin"
 export PATH="$PATH:$HOME/.cargo/bin"
 
 find -L "$HOME/.local/bin/scripts" -type d | while read line; do
-    export PATH="$line:$PATH"
+	export PATH="$line:$PATH"
 done
