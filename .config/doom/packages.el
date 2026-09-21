@@ -85,3 +85,6 @@
   :recipe (:host codeberg :repo "meow_king/typst-ts-mode"))
 (package! tinymist
   :recipe (:host github :repo "Myriad-Dreamin/tinymist"))
+
+;; 2026-09-20: adding devcontainer management to emacs
+(package! devcontainer)
