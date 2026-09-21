@@ -273,6 +273,27 @@
 ;; 2025-03-06: changing eww to search with my searxng by default
 (setq eww-search-prefix "http://localhost:6969/search?q=")
 
+;; 2026-09-21: trying to set up local ai coding
+(after! gptel
+  (setq gptel-backend
+        (gptel-make-ollama
+            "Ollama"
+          :host "arctic:11434"
+          :stream t
+          :models '(qwen2.5-coder:7b
+                    qwen2.5-coder:14b
+                    llama3:8b)))
+
+  (setq gptel-model 'qwen2.5-coder:7b)) 
+
+;; 2026-09-21: local ai coding part 2: aidermacs which is more complete they say
+(use-package! aidermacs
+  :commands aidermacs-transient-menu
+
+  :config
+  (setq aidermacs-default-chat-mode 'architect
+        aidermacs-default-model "ollama_chat/qwen2.5-coder:7b"))
+
 ;;; 2024-08-19 howm notetaking system config
 (use-package! howm
   ;; :mode ("_howm\\.org\\'" . howm-mode)
@@ -369,3 +390,8 @@
 (map! :localleader
       (:prefix ("i" . "IRC (ERC) control")
        :desc "Switch to ERC buffer" "s" #'erc-switch-to-buffer))
+
+;; 2026-09-21: saving keybind for ai stuff
+(map! :leader
+      :prefix ("a" . "AI")
+      :desc "Aidermacs" "a" #'aidermacs-transient-menu)

@@ -88,3 +88,6 @@
 
 ;; 2026-09-20: adding devcontainer management to emacs
 (package! devcontainer)
+
+;; 2026-09-21: trying the agentic workflow
+(package! aidermacs)
