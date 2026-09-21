@@ -294,6 +294,11 @@
   (setq aidermacs-default-chat-mode 'architect
         aidermacs-default-model "ollama_chat/qwen2.5-coder:7b"))
 
+(after! aidermacs
+  (add-hook! 'aidermacs-mode-hook
+    (evil-local-set-key 'insert (kbd "q") #'self-insert-command)
+    (evil-local-set-key 'normal (kbd "q") #'evil-record-macro)))
+
 ;;; 2024-08-19 howm notetaking system config
 (use-package! howm
   ;; :mode ("_howm\\.org\\'" . howm-mode)
