@@ -1,6 +1,6 @@
 # -*- mode: sh; -*-
 # vim: set filetype=sh:
-# alias sudo='doas'
+alias sudo='doas'
 
 if [ -x /usr/bin/dircolors ]; then
 	test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
