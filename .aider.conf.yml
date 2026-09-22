@@ -220,7 +220,7 @@ verify-ssl: false
 #subtree-only: false
 
 ## Enable/disable auto commit of LLM changes (default: True)
-auto-commits: disable
+auto-commits: no
 
 ## Enable/disable commits when repo is found dirty (default: True)
 #dirty-commits: true
