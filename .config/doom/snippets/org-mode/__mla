@@ -1,0 +1,62 @@
+# -*- mode: snippet -*-
+# name: MLA Org document
+# key: __mla
+# --
+
+
+#+LATEX_COMPILER: lualatex
+#+LATEX_CLASS_OPTIONS: [12pt, letterpaper]
+
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \setmainfont{Times New Roman}
+#+LATEX_HEADER: \usepackage{setspace}
+#+LATEX_HEADER: \doublespacing
+
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \pagestyle{fancy}
+
+#+LATEX_HEADER_EXTRA: \makeatletter
+#+LATEX_HEADER_EXTRA:   \lhead{}
+#+LATEX_HEADER_EXTRA:   \chead{}
+#+LATEX_HEADER_EXTRA:   \rhead{\@author\ \thepage}
+#+LATEX_HEADER_EXTRA:   \lfoot{}
+#+LATEX_HEADER_EXTRA:   \cfoot{}
+#+LATEX_HEADER_EXTRA:   \rfoot{}
+#+LATEX_HEADER_EXTRA: \makeatother
+#+LATEX_HEADER_EXTRA: \renewcommand{\headrulewidth}{0pt}
+#+LATEX_HEADER_EXTRA: \renewcommand{\footrulewidth}{0pt}
+#+LATEX_HEADER_EXTRA: \setlength{\headheight}{14.5pt}
+
+#+LATEX_HEADER: \usepackage{url}
+#+LATEX_HEADER: \urlstyle{same}
+
+#+LATEX_HEADER_EXTRA: \hypersetup{
+#+LATEX_HEADER_EXTRA:   colorlinks=true,
+#+LATEX_HEADER_EXTRA:   urlcolor=cyan,
+#+LATEX_HEADER_EXTRA:   linktocpage=true,
+#+LATEX_HEADER_EXTRA:   linkcolor=black,
+#+LATEX_HEADER_EXTRA:   citecolor=black,
+#+LATEX_HEADER_EXTRA:   pdfpagemode=UseOutlines,
+#+LATEX_HEADER_EXTRA: }
+
+#+TITLE: ${1:Title}
+#+DATE: ${2:day month year}
+#+AUTHOR: ${3:lastname}
+#+OPTIONS: toc:nil num:nil author:t title:nil
+#+EXPORT_FILE_NAME: ./build/${4:filename}
+
+@@latex:\setlength{\parindent}{0.5in}@@
+
+#+BEGIN_flushleft
+${5:firstname} {{{author}}} \\
+${6:Instructor} \\
+${7:Course} \\
+{{{date}}} \\
+#+END_flushleft
+
+#+begin_center
+{{{title}}}
+#+end_center
+
+$0
