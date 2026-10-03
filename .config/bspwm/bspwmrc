@@ -2,11 +2,26 @@
 
 . ~/.config/shell/env_vars
 
-# helper fun to run programs
+# Run a program in the background only if it is not already running.
+#
+# Commands given by name can be matched by process name. Scripts given by path
+# may actually appear as e.g. "sh /path/to/script", so match their full command
+# line instead.
 _run() {
-	if ! pgrep -x "${1}" >/dev/null; then
-		"$@" &
-	fi
+	cmd="$1"
+
+	case "$cmd" in
+	*/*)
+		if ! pgrep -f -- "$cmd" >/dev/null; then
+			"$@" &
+		fi
+		;;
+	*)
+		if ! pgrep -x -- "$cmd" >/dev/null; then
+			"$@" &
+		fi
+		;;
+	esac
 }
 
 # helper fun to start picom
@@ -90,7 +105,7 @@ _run systemctl --user restart wireplumber pipewire-pulse pipewire
 _run polybar # TODO: switch to a lemonbar-based setup eventually
 _run xfce4-power-manager
 _run easyeffects
-_run emacs --daemon
+_run /usr/bin/emacs --daemon
 # TODO add something to be able to
 # - start emacs daemon
 # - open emacs frame
