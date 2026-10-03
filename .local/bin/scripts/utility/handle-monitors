@@ -235,6 +235,13 @@ split_workspaces_between() {
 			bspc desktop "$workspace" -m "$monitor_2"
 		done
 
+		# XRandR causes bspwm to create a bootstrap "Desktop" workspace
+		# when a new monitor appears. Now that our real workspaces are on
+		# the monitor, remove that bootstrap workspace.
+		if bspc query -D -m "$monitor_1" --names | grep -Fxq Desktop; then
+			bspc desktop "${monitor_1}:Desktop" -r
+		fi
+
 		# Explicitly restore the configured order on both monitors.
 		bspc monitor "$monitor_1" -o $MON_1_WORKSPACES
 		bspc monitor "$monitor_2" -o $MON_2_WORKSPACES
@@ -267,17 +274,24 @@ setup_laptop_only() {
 		--primary \
 		--pos 0x0
 
-	# On initial startup this defines the complete workspace set.
-	#
-	# During hotplug reconciliation this moves all existing workspaces onto the
-	# surviving monitor before the external output is disabled.
-	put_all_workspaces_on "$LAPTOP_INTERNAL_OUTPUT"
-
-	# bspwm now has one logical monitor in our desired ordering.
-	bspc wm -O "$LAPTOP_INTERNAL_OUTPUT"
-
-	# Now shut down everything else.
+	# Let bspwm remove the disconnected/disabled external monitor first.
+	# With remove_disabled_monitors and remove_unplugged_monitors enabled,
+	# bspwm will transfer its workspaces onto the surviving monitor.
 	disable_other_outputs "$LAPTOP_INTERNAL_OUTPUT"
+
+	if [ "$FIRST_RUN" = true ]; then
+		put_all_workspaces_on "$LAPTOP_INTERNAL_OUTPUT"
+	else
+		# Give bspwm a moment to process the RandR monitor removal.
+		sleep 0.1
+
+		# bspwm has already merged the workspaces; restore our canonical order.
+		bspc monitor "$LAPTOP_INTERNAL_OUTPUT" -o \
+			$MON_1_WORKSPACES \
+			$MON_2_WORKSPACES
+	fi
+
+	bspc wm -O "$LAPTOP_INTERNAL_OUTPUT"
 }
 
 setup_laptop_external() {
