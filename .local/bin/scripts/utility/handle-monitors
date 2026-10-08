@@ -238,8 +238,8 @@ split_workspaces_between() {
 		# XRandR causes bspwm to create a bootstrap "Desktop" workspace
 		# when a new monitor appears. Now that our real workspaces are on
 		# the monitor, remove that bootstrap workspace.
-		if bspc query -D -m "$monitor_1" --names | grep -Fxq Desktop; then
-			bspc desktop "${monitor_1}:Desktop" -r
+		if bspc query -D --names | grep -Fxq Desktop; then
+			bspc desktop "Desktop" -r
 		fi
 
 		# Explicitly restore the configured order on both monitors.
