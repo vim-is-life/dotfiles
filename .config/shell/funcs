@@ -111,3 +111,21 @@ alert() {
 
 	notify-send --urgency=low -i "$icon" "$message (exit $status_local)"
 }
+
+# Usage: timer <duration> <message>
+# Duration supports seconds (s), minutes (m), hours (h), and days (d).
+# Examples:
+#   timer 30m "Work session done — go walk a lap."
+#   timer 10m "Check the oven."
+#   timer 1h "Take a break."
+#   timer 30m "Time to stretch!" &   # Run in background
+timer() {
+	TIMER_ALERT_PREFIX="/usr/share/sounds/freedesktop/stereo"
+	TIMER_ALERT_SOUND="alarm-clock-elapsed.oga"
+	duration="$1"
+	shift
+
+	sleep "$duration"
+	alert "$*"
+	mpv --no-video --really-quiet "$TIMER_ALERT_PREFIX/$TIMER_ALERT_SOUND"
+}
