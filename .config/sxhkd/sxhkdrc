@@ -88,6 +88,24 @@ alt + F1
 F12
 	librewolf -p school
 
+# Toggle play/pause
+# NOTE: these multimedia controls require playerctl and mpv-mpris to be
+# installed via apt. If they do not work, these programs are not installed
+XF86AudioPlay
+    playerctl play-pause
+
+# Next track
+XF86AudioNext
+    playerctl next
+
+# Previous track
+XF86AudioPrev
+    playerctl previous
+
+# Stop playback
+XF86AudioStop
+    playerctl stop
+
 ################################################################################
 
 ##### BSPWM HOTKEYS ############################################################
