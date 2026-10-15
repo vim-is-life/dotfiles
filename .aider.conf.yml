@@ -18,7 +18,7 @@
 # Main model:
 
 ## Specify the model to use for the main chat
-model: qwen_small
+model: qwen3.5_4b
 
 ########################
 # API Keys and settings:
@@ -74,8 +74,11 @@ api-key: OLLAMA_API_KEY=
 #alias: xxx
 ## Specify multiple values like this:
 alias:
-  - qwen_small:ollama_chat/qwen2.5-coder:7b
-  - qwen_medium:ollama_chat/qwen2.5-coder:14b
+  - qwen3.5_2b:ollama_chat/qwen3.5:2b
+  - qwen3.5_4b:ollama_chat/qwen3.5:4b
+  - qwen3.5_9b:ollama_chat/qwen3.5:9b
+  - coder2.5_7b:ollama_chat/qwen2.5-coder:7b
+  - coder2.5_14b:ollama_chat/qwen2.5-coder:14b
   - llama:ollama_chat/llama3:8b
 
 ## Set the reasoning_effort API parameter (default: not set)
