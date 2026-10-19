@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 # -*- mode: sh; -*-
 # vim: set filetype=sh:
 alias sudo='doas'
@@ -40,19 +41,6 @@ alias tbro='librewolf -p throwaway'
 alias ai_start='(start-openwebui &); doas systemctl start ollama'
 alias ai_stop='(podman stop openwebui &); doas systemctl stop ollama'
 
-# believe this is now defunct
-# for type in 'mla' 'gen' 'hist' 'sci' 'pres'; do
-#     alias "get$type"="get-org-template $type &&
-#                                        cd src &&
-#                                        chmod +x setup.sh &&
-#                                        ./setup.sh &&
-#                                        rm setup.sh &&
-#                                        cd - &&
-#                                        git init &&
-#                                        git add .gitignore &&
-#                                        git commit -m 'init commit'"
-# done
-
 # devour a window
 alias dsxiv='devour sxiv'
 alias dzath='devour zathura'
@@ -79,4 +67,5 @@ alias c='clear'
 alias up='sudo apt-get update'
 alias ug='sudo apt-get upgrade'
 alias xc='xclip -selection c'
-alias e2o='2>&1' # send stderr to stdout
+alias e2o='2>&1'               # send stderr to stdout
+alias stow='stow --no-folding' # don't want to have stow symlink entire dirs
