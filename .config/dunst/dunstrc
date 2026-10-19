@@ -1,0 +1,20 @@
+[global]
+    width = 600
+    height = (0, 360)
+
+    font = Berkeley Mono 16
+
+    padding = 18
+    horizontal_padding = 26
+    frame_width = 5
+
+[timer]
+    appname = timer
+    urgency = critical
+    timeout = 0
+
+    background = "#900000"
+    foreground = "#ffffff"
+    frame_color = "#ff0000"
+
+    format = "<span size='145%%'><b>%s</b></span>\n<span size='125%%'>%b</span>"

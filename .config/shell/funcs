@@ -145,10 +145,22 @@ alert() {
 timer() {
 	TIMER_ALERT_PREFIX="/usr/share/sounds/freedesktop/stereo"
 	TIMER_ALERT_SOUND="alarm-clock-elapsed.oga"
+
 	duration="$1"
 	shift
+	message="$*"
 
 	sleep "$duration"
-	alert "$*"
-	mpv --no-video --really-quiet "$TIMER_ALERT_PREFIX/$TIMER_ALERT_SOUND"
+
+	notify-send \
+		-a timer \
+		-u critical \
+		"Timer finished" \
+		"$message"
+
+	for _ in 1 2; do
+		mpv --no-video --really-quiet \
+			"$TIMER_ALERT_PREFIX/$TIMER_ALERT_SOUND"
+		sleep 1
+	done
 }
