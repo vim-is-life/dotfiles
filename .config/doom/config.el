@@ -286,21 +286,10 @@
 
   (setq gptel-model 'qwen2.5-coder:7b)) 
 
-;; 2026-09-21: local ai coding part 2: aidermacs which is more complete they say
-(use-package! aidermacs
-  :commands aidermacs-transient-menu
-
-  :config
-  (setq aidermacs-default-chat-mode 'architect
-        aidermacs-default-model "ollama_chat/qwen2.5-coder:7b")
-
-  :hook
-  (aidermacs-mode . visual-line-mode))
-
-(after! aidermacs
-  (add-hook! 'aidermacs-mode-hook
-    (evil-local-set-key 'insert (kbd "q") #'self-insert-command)
-    (evil-local-set-key 'normal (kbd "q") #'evil-record-macro)))
+;; 2026-10-19: codex integration
+(use-package! codex
+  :commands (codex codex-send-command
+                   codex-toggle codex-transient))
 
 ;;; 2024-08-19 howm notetaking system config
 (use-package! howm
@@ -399,7 +388,9 @@
       (:prefix ("i" . "IRC (ERC) control")
        :desc "Switch to ERC buffer" "s" #'erc-switch-to-buffer))
 
-;; 2026-09-21: saving keybind for ai stuff
+;; 2026-10-19: keybind for codex
 (map! :leader
       :prefix ("a" . "AI")
-      :desc "Aidermacs" "a" #'aidermacs-transient-menu)
+      :desc "Open codex" "c" #'codex
+      :desc "Codex commands" "C" #'codex-transient)
+

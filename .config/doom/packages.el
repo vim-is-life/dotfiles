@@ -90,4 +90,7 @@
 (package! devcontainer)
 
 ;; 2026-09-21: trying the agentic workflow
-(package! aidermacs)
+;; (package! aidermacs)
+;; 2026-10-19: trying codex instead
+(package! codex
+  :recipe (:host github :repo "benthamite/codex"))
