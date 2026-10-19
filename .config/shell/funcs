@@ -60,6 +60,29 @@ decrease_brightness() {
 	change_brightness $NEW_BRIGHTNESS
 }
 
+# MEDIA #######################################################################
+# audiodl - Download audio-only media using the dedicated yt-dlp profile.
+# Usage: audiodl [yt-dlp options] URL...
+# Config: ~/.config/youtube-dl/audio-only.config
+# All arguments are forwarded to yt-dlp.
+audiodl() {
+	yt-dlp \
+		--ignore-config \
+		--config-locations "$HOME/.config/youtube-dl/audio-only.config" \
+		"$@"
+}
+
+# churchdl - Download and archive church livestream recordings.
+# Usage: churchdl [yt-dlp options] URL...
+# Config: ~/.config/youtube-dl/church-archive.config
+# All arguments are forwarded to yt-dlp.
+churchdl() {
+	yt-dlp \
+		--ignore-config \
+		--config-locations "$HOME/.config/youtube-dl/church-archive.config" \
+		"$@"
+}
+
 # MISC FUNCTIONS ##############################################################
 m() {
 	# man -Tpdf "$@" | devour zathura -
