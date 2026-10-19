@@ -1,0 +1,75 @@
+#!/usr/bin/env sh
+set -eu
+
+# sermon-compress - Compress MKV video using NVIDIA HEVC NVENC.
+# Usage: sermon-compress FILE.mkv
+# Preserves audio, subtitles, chapters, metadata, and attachments.
+# Replaces the original only if encoding succeeds and saves space.
+
+src=${1:?Usage: sermon-compress FILE.mkv}
+
+# Require an existing MKV file.
+if [ ! -f "$src" ]; then
+	echo "Error: File does not exist: $src" >&2
+	exit 1
+fi
+
+case "$src" in
+*.mkv) ;;
+*)
+	echo "Error: Expected an MKV file" >&2
+	exit 1
+	;;
+esac
+
+# Create a temporary output alongside the source.
+dir=$(dirname -- "$src")
+tmp=$(mktemp "$dir/.sermon-nvenc.XXXXXXXX.mkv")
+
+# Clean up temporary output on exit or interruption.
+trap 'rm -f -- "$tmp"' EXIT
+trap 'exit 1' HUP INT TERM
+
+# Re-encode video using RTX 3060; copy other streams.
+ffmpeg -hide_banner -y -i "$src" \
+	-map 0 \
+	-map_metadata 0 \
+	-map_chapters 0 \
+	-c copy \
+	-c:v:0 hevc_nvenc \
+	-preset p6 \
+	-tune hq \
+	-rc vbr \
+	-b:v 650k \
+	-maxrate 950k \
+	-bufsize 1300k \
+	"$tmp"
+
+# Verify the output's video codec.
+codec=$(ffprobe -v error \
+	-select_streams v:0 \
+	-show_entries stream=codec_name \
+	-of default=noprint_wrappers=1:nokey=1 \
+	"$tmp")
+
+if [ "$codec" != "hevc" ]; then
+	echo "Error: Output validation failed; keeping original" >&2
+	exit 1
+fi
+
+# Compare file sizes in bytes.
+original_size=$(stat -c %s -- "$src")
+new_size=$(stat -c %s -- "$tmp")
+
+if [ "$new_size" -ge "$original_size" ]; then
+	echo "No storage savings; keeping original: $src"
+	exit 0
+fi
+
+# Replace original only after successful compression.
+mv -f -- "$tmp" "$src"
+
+saved=$(((original_size - new_size) / 1024 / 1024))
+
+echo "Compressed: $src"
+echo "Saved ${saved} MiB"
