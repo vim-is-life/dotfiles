@@ -1,0 +1,61 @@
+# -*- mode: conf -*-
+# vim: filetype=conf
+
+### VIDEO SELECTION
+# Download full playlists when supplied a playlist URL.
+--yes-playlist
+
+### VIDEO QUALITY
+# Best video up to 1080p plus best audio.
+# Fall back to a combined video/audio stream.
+-f "bv[height<=1080]+ba/b[height<=1080]"
+
+### OUTPUT FILES
+# Format: Title (Year).mkv
+# Prefer release year, then upload year.
+# Use "Unknown" when neither date is available.
+-o "%(title)s (%(release_date>%Y,upload_date>%Y|Unknown)s) [%(id)s].%(ext)s"
+
+# Save to current working directory.
+# No --paths option needed.
+
+### DOWNLOAD RELIABILITY
+# Retry failed fragments instead of silently losing video.
+--fragment-retries 15
+--retry-sleep fragment:exp=1:20
+--no-skip-unavailable-fragments
+
+# Resume incomplete downloads when possible.
+--continue
+
+### SUBTITLES
+# Download English subtitles, including automatic captions.
+--write-subs
+--write-auto-subs
+--sub-langs "en.*"
+--sub-format "srt/best"
+
+# Embed available subtitles into the video.
+--embed-subs
+
+### CONTAINER
+# Remux to MKV without re-encoding video or audio.
+--remux-video mkv
+
+### METADATA AND ARCHIVING
+# Embed standard metadata: title, date, artist, etc.
+--embed-metadata
+
+# Preserve chapters when available.
+--embed-chapters
+
+# Embed the full yt-dlp metadata JSON as an MKV attachment.
+--embed-info-json
+
+# Embed the thumbnail as cover artwork.
+--embed-thumbnail
+
+### AUTHENTICATION
+# No default cookies. Authenticate only when needed.
+# Example:
+# --cookies-from-browser "brave+gnomekeyring:Profile 3"
