@@ -101,3 +101,19 @@ fi
 source ~/.config/shell/env_vars
 source ~/.config/shell/funcs
 source ~/.config/shell/bash_and_zsh_aliases
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/dma/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/dma/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/dma/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/dma/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
