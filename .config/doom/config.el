@@ -114,15 +114,38 @@
       doom-modeline-continuous-word-count-modes          ; show word count all the time for these modes
       '(markdown-mode gfm-mode org-mode))
 
-;; emms
-(emms-all)
-(emms-default-players)
-;; (emms-mode-line 1)
-;; (emms-playing-time 1)
-(setq emms-source-file-default-directory (concat "/home/" user-login-name "/Music/")
-      emms-playlist-buffer-name "*Music*"
-      emms-info-asynchronously t
-      emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find)
+;;; EMMS
+(after! emms
+  (require 'emms-mpris)
+  (require 'emms-setup)
+  (require 'emms-player-mpv)
+
+  (emms-mpris-enable)
+  (emms-all)
+
+  (setq emms-source-file-default-directory
+        (expand-file-name "~/Music/")
+
+        emms-playlist-buffer-name
+        "*Music*"
+
+        emms-info-asynchronously
+        t
+
+        emms-source-file-directory-tree-function
+        'emms-source-file-directory-tree-find
+
+        emms-player-list
+        '(emms-player-mpv)
+
+        emms-player-mpv-parameters
+        '("--quiet"
+          "--really-quiet"
+          "--no-config"
+          "--no-audio-display"
+          "--force-window=no"
+          "--vo=null"
+          "--no-resume-playback")))
 
 ;; stuff for c
 (after! ccls
@@ -235,11 +258,11 @@
 ;; 2025-03-04: adding package to be able to control mpv from emacs
 ;; TODO find way to have mpvi pop up the controls in a small buffer when opening the mpvi-seek interface
 (use-package! mpvi
-  :hook (dired-mode . mpvi-emms-integrated-mode)
-  :hook (org-mode . mpvi-emms-integrated-mode)
-  :custom (mpvi-regular-seek-step 5)
-  :custom (mpvi-big-seek-step 60)
-  :custom (mpvi-tesseract-args "-l eng"))
+  :commands (mpvi-open mpvi-seek)
+  :custom
+  (mpvi-regular-seek-step 5)
+  (mpvi-big-seek-step 60)
+  (mpvi-tesseract-args "-l eng"))
 
 ;; 2025-03-06 irc (ERC client) config
 (setq erc-nick "segfault8989"
@@ -346,16 +369,19 @@
        :desc "Winner undo" "<left>" #'winner-undo))
 
 ;; emms + mpvi
+;;; EMMS + mpvi controls
 (map! :leader
-      (:prefix ("e" . "mpvi and EMMS audio player")
-       :desc "Go to emms playlist" "a" #'emms-playlist-mode-go
-       :desc "Emms pause track" "x" #'emms-pause
-       :desc "Emms stop track" "s" #'emms-stop
-       :desc "Emms play previous track" "p" #'emms-previous
-       :desc "Emms play next track" "n" #'emms-next
-       :desc "Emms play file" "o" #'emms-play-file
-       :desc "Open the `mpvi-seek' interface" "d" #'mpvi-seek ; think like "mpvi-do" or something
-       :desc "Open video with mpv" "O" #'mpvi-open))
+      (:prefix ("e" . "music")
+       :desc "Playlist"            "a" #'emms-playlist-mode-go
+       :desc "Pause/resume"        "x" #'emms-pause
+       :desc "Stop"                "s" #'emms-stop
+       :desc "Previous"            "p" #'emms-previous
+       :desc "Next"                "n" #'emms-next
+       :desc "Play file"           "o" #'emms-play-file
+       :desc "Play directory"      "r" #'emms-play-directory-tree
+       :desc "Add directory"       "R" #'emms-add-directory-tree
+       :desc "mpvi seek"           "d" #'mpvi-seek  ; things like mpvi-do and stuff
+       :desc "Open video"          "O" #'mpvi-open))
 
 ;; ledger-mode: Make C-p go to previous uncleared and C-n go to next uncleared.
 (map! :mode 'ledger-mode
