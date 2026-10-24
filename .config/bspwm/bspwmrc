@@ -80,6 +80,24 @@ _run ~/.local/bin/scripts/utility/watch-monitors
 export _JAVA_AWT_WM_NONREPARENTING=1
 wmname LG3D &
 
+# Remove reserved padding from external monitors on laptops only.
+# Leave desktop configurations unchanged.
+laptop_display=$(xrandr --query |
+	awk '/^(eDP|LVDS)[^ ]* connected/ { print $1; exit }')
+
+if [ -n "$laptop_display" ]; then
+	for monitor in $(bspc query -M --names); do
+		# Skip the built-in laptop display.
+		[ "$monitor" = "$laptop_display" ] && continue
+
+		# External displays should have no reserved padding.
+		bspc config -m "$monitor" top_padding 0
+		bspc config -m "$monitor" bottom_padding 0
+		bspc config -m "$monitor" left_padding 0
+		bspc config -m "$monitor" right_padding 0
+	done
+fi
+
 # END BSPWM CONFIG ############################################################
 # also check out ~/.dotfiles/.config/sxhkd/sxhkdrc
 
@@ -102,7 +120,7 @@ _run syncthing --allow-newer-config
 # also, seems like on fresh restart, my digital audio doesnt show up right. this
 # is quick fix for now
 _run systemctl --user restart wireplumber pipewire-pulse pipewire
-_run polybar # TODO: switch to a lemonbar-based setup eventually
+_run ~/.config/polybar/polybar-launch.sh # TODO: switch to a lemonbar-based setup eventually
 _run xfce4-power-manager
 _run easyeffects
 _run /usr/bin/emacs --daemon
