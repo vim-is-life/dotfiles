@@ -73,9 +73,12 @@
 (package! calc-rref
   :recipe (:local-repo "~/.config/doom/packages/calc-rref/"))
 
+;; 2026-10-24: removed this mpv integraton. now i use mpv mpris and i think
+;; that's probably sufficient. can look at reenabling this later if i need or
+;; want it
 ;; 2025-03-04: adding mpvi package to be able to control mpv from emacs
-(package! mpvi
-  :recipe (:local-repo "~/.config/doom/packages/mpvi/"))
+;; (package! mpvi
+;;   :recipe (:local-repo "~/.config/doom/packages/mpvi/"))
 
 ;; 2025-12-02: adding this to help with studying
 (package! org-drill)

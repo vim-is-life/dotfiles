@@ -120,7 +120,6 @@
   (require 'emms-setup)
   (require 'emms-player-mpv)
 
-  (emms-mpris-enable)
   (emms-all)
 
   (setq emms-source-file-default-directory
@@ -145,7 +144,8 @@
           "--no-audio-display"
           "--force-window=no"
           "--vo=null"
-          "--no-resume-playback")))
+          "--no-resume-playback"))
+  (emms-mpris-enable))
 
 ;; stuff for c
 (after! ccls
@@ -254,15 +254,6 @@
       calc-symbolic-mode t
       calc-float-format '(fix 5)
       calc-internal-prec 50)
-
-;; 2025-03-04: adding package to be able to control mpv from emacs
-;; TODO find way to have mpvi pop up the controls in a small buffer when opening the mpvi-seek interface
-(use-package! mpvi
-  :commands (mpvi-open mpvi-seek)
-  :custom
-  (mpvi-regular-seek-step 5)
-  (mpvi-big-seek-step 60)
-  (mpvi-tesseract-args "-l eng"))
 
 ;; 2025-03-06 irc (ERC client) config
 (setq erc-nick "segfault8989"
@@ -379,9 +370,7 @@
        :desc "Next"                "n" #'emms-next
        :desc "Play file"           "o" #'emms-play-file
        :desc "Play directory"      "r" #'emms-play-directory-tree
-       :desc "Add directory"       "R" #'emms-add-directory-tree
-       :desc "mpvi seek"           "d" #'mpvi-seek  ; things like mpvi-do and stuff
-       :desc "Open video"          "O" #'mpvi-open))
+       :desc "Add directory"       "R" #'emms-add-directory-tree))
 
 ;; ledger-mode: Make C-p go to previous uncleared and C-n go to next uncleared.
 (map! :mode 'ledger-mode
