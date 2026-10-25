@@ -139,11 +139,9 @@
 
         emms-player-mpv-parameters
         '("--quiet"
-          "--really-quiet"
           "--no-config"
           "--no-audio-display"
           "--force-window=no"
-          "--vo=null"
           "--no-resume-playback"))
   (emms-mpris-enable))
 
