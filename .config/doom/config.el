@@ -83,6 +83,37 @@
 
 
 
+;;; 2026-10-26: adding functionality to cycle opacity
+;; Opacity levels, in the order we want to cycle through.
+(defvar my/opacity-levels '(77 60 100 85)
+  "Background opacity levels for graphical Emacs.")
+
+;; Cycle to the next opacity level.
+(defun my/cycle-opacity ()
+  "Cycle through the configured background opacity levels."
+  (interactive) ; Allow invocation via M-x or keybinding.
+
+  ;; Transparency is controlled by Alacritty in terminal Emacs.
+  (if (not (display-graphic-p))
+      (message "Opacity cycling requires GUI Emacs.")
+
+    ;; Read current opacity, then find the next value.
+    (let* ((current (or (frame-parameter nil 'alpha-background) 100))
+           (next (or (cadr (member current my/opacity-levels))
+                     (car my/opacity-levels))))
+
+      ;; Apply opacity to the current frame.
+      (set-frame-parameter nil 'alpha-background next)
+      (message "Emacs opacity: %d%%" next))))
+
+;; Start new frames at 75% opacity.
+(setf (alist-get 'alpha-background default-frame-alist) (car my/opacity-levels))
+
+;; Apply 75% opacity to the existing GUI frame.
+;; (when (display-graphic-p)
+;;   (set-frame-parameter nil 'alpha-background 75))
+
+
 ;; function for making sure the line endings are always compatible
 (defun no-junk-please-were-unixish ()
   (let ((coding-str (symbol-name buffer-file-coding-system)))
@@ -407,3 +438,8 @@
       :desc "Open codex" "c" #'codex
       :desc "Codex commands" "C" #'codex-transient)
 
+
+;; 2026-10-26: Doom shortcut for toggling thru opacity: SPC t T
+(map! :leader
+      :desc "Cycle background opacity"
+      "t T" #'my/cycle-opacity)

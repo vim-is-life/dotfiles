@@ -40,8 +40,8 @@ style = "Bold"
 family = "Berkeley Mono"
 style = "Italic"
 
-[terminal]
-osc52 = "OnlyCopy"
+# [terminal]
+# osc52 = "OnlyCopy"
 
 # [font.bold]
 # family = "hack"
