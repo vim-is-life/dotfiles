@@ -59,8 +59,9 @@ alias ls="exa -lh"
 alias cliptopdf='xclip -selection c -o | pandoc -t pdf --pdf-engine=pdfroff -Vpointsize:12p -Vlineheight:13.8p -o'
 alias update-grub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 alias chkip='curl https://ipleak.net/json/'
-alias em='/usr/bin/emacs -nw'
-alias emacs='emacsclient -c -a emacs'
+alias em='/usr/bin/emacs -nw'      # Open standalone Emacs in the terminal
+alias emcon='emacsclient -t -a ""' # Open terminal client; start daemon if needed
+alias emacs='emacsclient -c -a ""' # Open GUI client; start daemon if needed
 alias dots="/usr/bin/git --git-dir=$HOME/.dotfiles --work-tree=$HOME"
 alias mkgi='curl -Lo .gitignore https://gitignore.io/api/eclipse,emacs,haskell,intellij,java,julia,kotlin,latex,linux,php,python,tex,text,vim,windows'
 alias c='clear'
