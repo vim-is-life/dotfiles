@@ -9,22 +9,32 @@
 
 . "$HOME/.config/shell/funcs"
 
-# Prompt for duration; exit if canceled.
-duration=$(rofi -dmenu -p "Timer duration?") || exit 0
+config_dir="$HOME/.config/rofi-timer"
+defaults="$config_dir/defaults.conf"
+parser="$config_dir/parse-defaults.awk"
 
-# Normalize input: remove spaces and convert to lowercase.
+# WHY: Read presets from the requested section without coupling durations
+# to messages. Missing configuration means no presets.
+get_defaults() {
+	[ -f "$defaults" ] || return 0
+	awk -v section="$1" -f "$parser" "$defaults"
+}
+
+# Offer preset durations while still accepting custom input.
+duration=$(get_defaults durations | rofi -dmenu -p "Timer duration") || exit 0
+
+# Normalize whitespace and capitalization (e.g., "15 M" -> "15m").
 duration=$(printf '%s' "$duration" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
 
-# WHY: Require one or more digits followed by exactly one time unit
-# (s/m/h/d), preventing malformed values from reaching sleep.
+# WHY: Sleep requires digits followed by a single valid time unit.
 if ! printf '%s\n' "$duration" | grep -Eq '^[0-9]+[smhd]$'; then
 	notify-send -u critical "Invalid timer duration" "$duration"
 	exit 1
 fi
 
-# Prompt for optional message; exit if canceled.
-message=$(rofi -dmenu -p "Timer message (optional)") || exit 0
+# Offer independent message presets; custom and empty messages are allowed.
+message=$(get_defaults messages | rofi -dmenu -p "Timer message (optional)") || exit 0
 
-# Start timer in background and confirm.
+# Run timer asynchronously and notify immediately.
 timer "$duration" "$message" >/dev/null 2>&1 &
 notify-send -a timer "Timer started" "$duration — ${message:-No message}"
