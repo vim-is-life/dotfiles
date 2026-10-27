@@ -37,4 +37,4 @@ message=$(get_defaults messages | rofi -dmenu -p "Timer message (optional)") || 
 
 # Run timer asynchronously and notify immediately.
 timer "$duration" "$message" >/dev/null 2>&1 &
-notify-send -a timer "Timer started" "$duration — ${message:-No message}"
+notify-send "Timer started" "$duration — ${message:-No message}"
