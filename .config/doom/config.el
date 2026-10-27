@@ -145,6 +145,15 @@
       doom-modeline-continuous-word-count-modes          ; show word count all the time for these modes
       '(markdown-mode gfm-mode org-mode))
 
+;;; pdf tools
+;; 2026-10-27: add a way to do occur with convenient keybind
+(after! pdf-view
+  ;; Search all occurrences in the current PDF.
+  (map! :map pdf-view-mode-map
+        :localleader
+        :desc "Search PDF occurrences"
+        "s" #'pdf-occur))
+
 ;;; EMMS
 (after! emms
   (require 'emms-mpris)
