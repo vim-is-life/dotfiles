@@ -156,17 +156,10 @@
   (setq emms-source-file-default-directory
         (expand-file-name "~/Music/")
 
-        emms-playlist-buffer-name
-        "*Music*"
-
-        emms-info-asynchronously
-        t
-
-        emms-source-file-directory-tree-function
-        'emms-source-file-directory-tree-find
-
-        emms-player-list
-        '(emms-player-mpv)
+        emms-playlist-buffer-name "*Music*"
+        emms-info-asynchronously t
+        emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
+        emms-player-list '(emms-player-mpv)
 
         emms-player-mpv-parameters
         '("--quiet"
