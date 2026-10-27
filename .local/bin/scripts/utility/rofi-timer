@@ -21,7 +21,7 @@ get_defaults() {
 }
 
 # Offer preset durations while still accepting custom input.
-duration=$(get_defaults durations | rofi -dmenu -p "Timer duration") || exit 0
+duration=$(get_defaults durations | rofi -dmenu -i -p "Timer duration") || exit 0
 
 # Normalize whitespace and capitalization (e.g., "15 M" -> "15m").
 duration=$(printf '%s' "$duration" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
@@ -33,7 +33,7 @@ if ! printf '%s\n' "$duration" | grep -Eq '^[0-9]+[smhd]$'; then
 fi
 
 # Offer independent message presets; custom and empty messages are allowed.
-message=$(get_defaults messages | rofi -dmenu -p "Timer message (optional)") || exit 0
+message=$(get_defaults messages | rofi -dmenu -i -p "Timer message (optional)") || exit 0
 
 # Run timer asynchronously and notify immediately.
 timer "$duration" "$message" >/dev/null 2>&1 &
