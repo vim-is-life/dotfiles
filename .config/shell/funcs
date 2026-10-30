@@ -84,20 +84,22 @@ churchdl() {
 }
 
 # lecturedl - Download lecture recordings using yt-dlp.
-# Usage: lecturedl [-w] [-p PROFILE] [--] [yt-dlp options] URL...
-#   -w, --with-profile      Authenticate using Brave cookies.
-#   -p, --profile PROFILE  Use a specific Brave profile (implies -w).
+# Usage: lecturedl [-w] [-G] [-p PROFILE] [--] [yt-dlp options] URL...
+#   -w, --with-profile      Use Brave cookies with GNOME Keyring.
+#   -p, --profile PROFILE  Select Brave profile (implies -w).
+#   -G, --no-gnome         Use Brave cookies without GNOME Keyring.
 #   -h, --help             Display usage information.
-# Defaults to no authentication; forwards remaining arguments to yt-dlp.
+# Defaults to no cookies; forwards remaining arguments to yt-dlp.
 lecturedl() {
 	local_opts=$(getopt \
-		-o wp:h \
-		-l with-profile,profile:,help \
+		-o wp:Gh \
+		-l with-profile,profile:,no-gnome,help \
 		-n lecturedl -- "$@") || return 2
 
 	eval "set -- $local_opts"
 
 	use_brave=false
+	use_gnome=true
 	profile=
 
 	while :; do
@@ -111,9 +113,14 @@ lecturedl() {
 			profile=$2
 			shift 2
 			;;
+		-G | --no-gnome)
+			use_brave=true
+			use_gnome=false
+			shift
+			;;
 		-h | --help)
 			printf '%s\n' \
-				'Usage: lecturedl [-w] [-p PROFILE] [--] [yt-dlp options] URL...'
+				'Usage: lecturedl [-w] [-G] [-p PROFILE] [--] [yt-dlp options] URL...'
 			return 0
 			;;
 		--)
@@ -124,16 +131,20 @@ lecturedl() {
 	done
 
 	if [ "$use_brave" = true ]; then
-		if [ -n "$profile" ]; then
-			yt-dlp --cookies-from-browser \
-				"brave+gnomekeyring:$profile" "$@"
+		if [ "$use_gnome" = true ]; then
+			browser=brave+gnomekeyring
 		else
-			yt-dlp --cookies-from-browser \
-				'brave+gnomekeyring' "$@"
+			browser=brave+basictext
 		fi
-	else
-		yt-dlp "$@"
+
+		if [ -n "$profile" ]; then
+			browser="$browser:$profile"
+		fi
+
+		set -- --cookies-from-browser "$browser" "$@"
 	fi
+
+	yt-dlp "$@"
 }
 
 # MISC FUNCTIONS ##############################################################
