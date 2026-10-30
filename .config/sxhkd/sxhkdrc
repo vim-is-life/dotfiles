@@ -20,7 +20,7 @@ super + alt + space
 
 # launch emacs client
 super + e
-    emacsclient -c -a emacs
+    emacsclient -c -a ""
 
 # open an org capture window, and then make it floating
 super + z
