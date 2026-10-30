@@ -52,9 +52,12 @@ ctrl + alt + space
 	~/.local/bin/scripts/utility/show-power-dialog
 
 # open a nvim buffer to show the sxhkdrc so you can know your keybinds
+# and, open it in conf dir so if you want to navigate over to shell funcs or
+# aliases, you can
 ctrl + alt + h
 	bspc rule -a Alacritty --one-shot state=floating; \
-    alacritty -T 'neovim view: sxhkdrc (press ZZ to exit)' -e sh -c "<~/.config/sxhkd/sxhkdrc sed '/TODO/d' | view"
+    alacritty -T 'neovim view: sxhkdrc (press ZZ to exit)' -e \
+    sh -c "cd ~/.config/; <~/.config/sxhkd/sxhkdrc sed '/TODO/d' | view"
 
 # change the wallpaper without restarting wm
 super + alt + b:
