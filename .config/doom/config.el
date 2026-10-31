@@ -279,7 +279,15 @@
 ;; org-pomodoro settings
 (setq org-pomodoro-length 25)
 
-;; calc settings
+;; 2026-10-30: org icalendar export configuration
+(after! ox-icalendar
+  (setq org-icalendar-timezone "America/Chicago"
+        org-icalendar-date-time-format ";TZID=%Z:%Y%m%dT%H%M%S"
+        org-icalendar-store-UID t
+        org-icalendar-include-todo nil
+        org-icalendar-alarm-time 30))
+
+;;; calc settings
 (after! calc
   (use-package! calc-rref)
   (setq calc-prefer-frac t
