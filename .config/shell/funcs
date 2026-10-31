@@ -228,3 +228,15 @@ timer() {
 		sleep 1
 	done
 }
+
+# Usage: whenfree12 [whenfree options]
+# Runs whenfree and converts 24-hour times to 12-hour AM/PM format.
+# Requires: whenfree, awk, and ~/.config/when-free/12h.awk
+# Examples:
+#   whenfree12
+#   whenfree12 --days "next week"
+#   whenfree12 --hours 09:00-18:00
+#   whenfree12 --days "next week" --hours 09:00-18:00 --min 15
+whenfree12() {
+	whenfree "$@" | awk -f ~/.config/when-free/12h.awk
+}
