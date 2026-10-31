@@ -280,11 +280,13 @@
 (setq org-pomodoro-length 25)
 
 ;; calc settings
-(use-package! calc-rref)
-(setq calc-prefer-frac t
-      calc-symbolic-mode t
-      calc-float-format '(fix 5)
-      calc-internal-prec 50)
+(after! calc
+  (use-package! calc-rref)
+  (setq calc-prefer-frac t
+        calc-symbolic-mode t
+        calc-float-format '(fix 5)
+        calc-internal-prec 50
+        calc-kill-line-numbering nil))
 
 ;; 2025-03-06 irc (ERC client) config
 (setq erc-nick "segfault8989"
