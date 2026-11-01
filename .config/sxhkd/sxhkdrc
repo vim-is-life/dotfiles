@@ -95,6 +95,22 @@ alt + F1
 F12
 	librewolf -p school
 
+# Volume up (5%)
+XF86AudioRaiseVolume
+    pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+# Volume down (5%)
+XF86AudioLowerVolume
+    pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+# Toggle speaker mute
+XF86AudioMute
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# Toggle microphone mute
+XF86AudioMicMute
+    pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
 # Toggle play/pause
 # NOTE: these multimedia controls require playerctl and mpv-mpris to be
 # installed via apt. If they do not work, these programs are not installed
