@@ -114,12 +114,13 @@
 ;;   (set-frame-parameter nil 'alpha-background 75))
 
 
+;;; 2026-11-05: maybe it is not so nice to automatically make noise edits... whoops
 ;; function for making sure the line endings are always compatible
-(defun no-junk-please-were-unixish ()
-  (let ((coding-str (symbol-name buffer-file-coding-system)))
-    (when (string-match "-\\(?:dos\\|mac\\)$" coding-str)
-      (set-buffer-file-coding-system 'unix))))
-(add-hook 'find-file-hook 'no-junk-please-were-unixish) ;; call the function defined earlier i believe this is doing
+;; (defun no-junk-please-were-unixish ()
+;;   (let ((coding-str (symbol-name buffer-file-coding-system)))
+;;     (when (string-match "-\\(?:dos\\|mac\\)$" coding-str)
+;;       (set-buffer-file-coding-system 'unix))))
+;; (add-hook 'find-file-hook 'no-junk-please-were-unixish) ;; call the function defined earlier i believe this is doing
 
 ;;; Miscellaneous config
 (setq ispell-program-name "aspell")
