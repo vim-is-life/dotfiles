@@ -78,7 +78,7 @@ _run ~/.local/bin/scripts/utility/watch-monitors
 
 # do this to make java apps work right
 export _JAVA_AWT_WM_NONREPARENTING=1
-wmname LG3D &
+_run wmname LG3D
 
 # Remove reserved padding from external monitors on laptops only.
 # Leave desktop configurations unchanged.
@@ -103,7 +103,7 @@ fi
 
 # GENERAL SETTINGS ############################################################
 # switch caps to ctrl
-setxkbmap -option ctrl:nocaps &
+_run setxkbmap -option ctrl:nocaps
 
 # make sure i dont see a weird 'X' for cursor
 xsetroot -cursor_name left_ptr &
@@ -144,7 +144,7 @@ _run /usr/bin/emacs --daemon
 
 # WALLPAPERS ##################################################################
 _run ~/.local/bin/scripts/utility/set-wallpaper
-xss-lock --transfer-sleep-lock -- i3lock --nofork --tiling --image /tmp/lockpaper.png &
+_run xss-lock --transfer-sleep-lock -- i3lock --nofork --tiling --image /tmp/lockpaper.png
 
 # TODO:
 # - get wal set up and then use that leter to config the border color for
